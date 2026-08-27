@@ -607,6 +607,9 @@ public final class Player implements PlaybackListener, Listener {
                 R.string.playback_skip_silence_key), getPlaybackSkipSilence());
         final PlaybackParameters savedParameters = retrievePlaybackParametersFromPrefs(this);
         setPlaybackParameters(savedParameters.speed, savedParameters.pitch, playbackSkipSilence);
+        // restore the repeat mode chosen in a previous session
+        simpleExoPlayer.setRepeatMode(getPrefs().getInt(
+                getContext().getString(R.string.last_repeat_mode), REPEAT_MODE_OFF));
 
         playQueue = queue;
         playQueue.init();
@@ -1279,6 +1282,9 @@ public final class Player implements PlaybackListener, Listener {
                     break;
             }
             simpleExoPlayer.setRepeatMode(repeatMode);
+            // save the new repeat mode so it can be restored in a future session
+            getPrefs().edit().putInt(
+                    getContext().getString(R.string.last_repeat_mode), repeatMode).apply();
         }
     }
 

@@ -51,6 +51,16 @@
         app:iconSpaceReserved="false"
         app:useSimpleSummaryProvider="true" />
 
+    <ListPreference
+        android:defaultValue="@string/ui_scale_default_value"
+        android:entries="@array/ui_scale_description"
+        android:entryValues="@array/ui_scale_values"
+        android:key="@string/ui_scale_key"
+        android:title="@string/ui_scale_title"
+        app:singleLineTitle="false"
+        app:iconSpaceReserved="false"
+        app:useSimpleSummaryProvider="true" />
+
     <Preference
         android:key="@string/caption_settings_key"
         android:summary="@string/caption_setting_description"

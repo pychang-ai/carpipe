@@ -4,6 +4,7 @@ import static org.schabi.newpipe.QueueItemMenuUtil.openPopupMenu;
 import static org.schabi.newpipe.player.helper.PlayerHelper.formatSpeed;
 
 import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.Bundle;
@@ -46,6 +47,7 @@ import org.schabi.newpipe.util.NavigationHelper;
 import org.schabi.newpipe.util.PermissionHelper;
 import org.schabi.newpipe.util.ServiceHelper;
 import org.schabi.newpipe.util.ThemeHelper;
+import org.schabi.newpipe.util.UiScaleHelper;
 
 import java.util.List;
 import java.util.Optional;
@@ -80,6 +82,11 @@ public final class PlayQueueActivity extends AppCompatActivity
     ////////////////////////////////////////////////////////////////////////////
     // Activity Lifecycle
     ////////////////////////////////////////////////////////////////////////////
+
+    @Override
+    protected void attachBaseContext(final Context newBase) {
+        super.attachBaseContext(UiScaleHelper.wrapContext(newBase));
+    }
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {

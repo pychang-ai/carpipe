@@ -235,6 +235,7 @@
     <string name="prefer_original_audio_key">prefer_original_audio</string>
     <string name="prefer_descriptive_audio_key">prefer_descriptive_audio</string>
     <string name="last_resize_mode">last_resize_mode</string>
+    <string name="last_repeat_mode">last_repeat_mode</string>
 
     <string name="reset_settings">reset_settings</string>
 
@@ -1456,6 +1457,22 @@
         <item>@string/auto</item>
         <item>@string/on</item>
         <item>@string/off</item>
+    </string-array>
+
+    <string name="ui_scale_key">ui_scale</string>
+
+    <string name="ui_scale_default_value">1.0</string>
+    <string-array name="ui_scale_values">
+        <item>1.0</item>
+        <item>1.15</item>
+        <item>1.3</item>
+        <item>1.5</item>
+    </string-array>
+    <string-array name="ui_scale_description">
+        <item>@string/ui_scale_normal</item>
+        <item>@string/ui_scale_large</item>
+        <item>@string/ui_scale_larger</item>
+        <item>@string/ui_scale_largest</item>
     </string-array>
 
     <string name="recaptcha_cookies_key">recaptcha_cookies_key</string>

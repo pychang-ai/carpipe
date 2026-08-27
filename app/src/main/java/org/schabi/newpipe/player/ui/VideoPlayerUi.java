@@ -1,6 +1,7 @@
 package org.schabi.newpipe.player.ui;
 
 import static com.google.android.exoplayer2.Player.REPEAT_MODE_ALL;
+import static com.google.android.exoplayer2.Player.REPEAT_MODE_OFF;
 import static com.google.android.exoplayer2.Player.REPEAT_MODE_ONE;
 import static org.schabi.newpipe.MainActivity.DEBUG;
 import static org.schabi.newpipe.ktx.ViewUtils.animate;
@@ -213,6 +214,7 @@ public abstract class VideoPlayerUi extends PlayerUi implements SeekBar.OnSeekBa
         binding.getRoot().setOnTouchListener(playerGestureListener);
 
         binding.repeatButton.setOnClickListener(v -> onRepeatClicked());
+        binding.repeatButtonMain.setOnClickListener(v -> onRepeatClicked());
         binding.shuffleButton.setOnClickListener(v -> onShuffleClicked());
 
         binding.playPauseButton.setOnClickListener(makeOnClickListener(player::playPause));
@@ -289,6 +291,7 @@ public abstract class VideoPlayerUi extends PlayerUi implements SeekBar.OnSeekBa
         gestureDetector = null;
 
         binding.repeatButton.setOnClickListener(null);
+        binding.repeatButtonMain.setOnClickListener(null);
         binding.shuffleButton.setOnClickListener(null);
 
         binding.playPauseButton.setOnClickListener(null);
@@ -954,16 +957,7 @@ public abstract class VideoPlayerUi extends PlayerUi implements SeekBar.OnSeekBa
     public void onRepeatModeChanged(@RepeatMode final int repeatMode) {
         super.onRepeatModeChanged(repeatMode);
 
-        if (repeatMode == REPEAT_MODE_ALL) {
-            binding.repeatButton.setImageResource(
-                    com.google.android.exoplayer2.ui.R.drawable.exo_controls_repeat_all);
-        } else if (repeatMode == REPEAT_MODE_ONE) {
-            binding.repeatButton.setImageResource(
-                    com.google.android.exoplayer2.ui.R.drawable.exo_controls_repeat_one);
-        } else /* repeatMode == REPEAT_MODE_OFF */ {
-            binding.repeatButton.setImageResource(
-                    com.google.android.exoplayer2.ui.R.drawable.exo_controls_repeat_off);
-        }
+        setRepeatButton(repeatMode);
     }
 
     @Override
@@ -996,6 +990,9 @@ public abstract class VideoPlayerUi extends PlayerUi implements SeekBar.OnSeekBa
             default -> com.google.android.exoplayer2.ui.R.drawable.exo_controls_repeat_off;
         };
         binding.repeatButton.setImageResource(resId);
+        binding.repeatButtonMain.setImageResource(resId);
+        // dim the main repeat button when repeating is off, so its state is readable at a glance
+        binding.repeatButtonMain.setImageAlpha(repeatMode == REPEAT_MODE_OFF ? 77 : 255);
     }
 
     //endregion

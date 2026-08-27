@@ -42,6 +42,7 @@ import org.schabi.newpipe.player.mediasession.MediaSessionPlayerUi;
 import org.schabi.newpipe.player.notification.NotificationPlayerUi;
 import org.schabi.newpipe.player.notification.NotificationUtil;
 import org.schabi.newpipe.util.ThemeHelper;
+import org.schabi.newpipe.util.UiScaleHelper;
 
 import java.lang.ref.WeakReference;
 import java.util.List;
@@ -260,7 +261,8 @@ public final class PlayerService extends MediaBrowserServiceCompat {
 
     @Override
     protected void attachBaseContext(final Context base) {
-        super.attachBaseContext(AudioServiceLeakFix.preventLeakOf(base));
+        super.attachBaseContext(
+                AudioServiceLeakFix.preventLeakOf(UiScaleHelper.wrapContext(base)));
     }
     //endregion
 

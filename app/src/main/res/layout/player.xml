@@ -570,6 +570,20 @@
                 android:src="@drawable/ic_next"
                 app:tint="@color/white" />
 
+            <androidx.appcompat.widget.AppCompatImageButton
+                android:id="@+id/repeatButtonMain"
+                android:layout_width="0dp"
+                android:layout_height="40dp"
+                android:layout_marginStart="10dp"
+                android:layout_weight="1"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:clickable="true"
+                android:contentDescription="@string/notification_action_repeat"
+                android:focusable="true"
+                android:scaleType="fitCenter"
+                android:src="@drawable/exo_controls_repeat_off"
+                app:tint="@color/white" />
+
         </LinearLayout>
 
     </RelativeLayout>

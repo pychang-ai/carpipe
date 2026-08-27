@@ -34,6 +34,20 @@ public class AppearanceSettingsFragment extends BasePreferenceFragment {
             return false;
         });
 
+        final String uiScaleKey = getString(R.string.ui_scale_key);
+        findPreference(uiScaleKey).setOnPreferenceChangeListener((preference, newValue) -> {
+            defaultPreferences.edit()
+                    .putString(uiScaleKey, newValue.toString())
+                    // makes MainActivity recreate itself with the new scale when it resumes
+                    .putBoolean(Constants.KEY_THEME_CHANGE, true)
+                    .apply();
+
+            if (getActivity() != null) {
+                ActivityCompat.recreate(getActivity());
+            }
+            return false;
+        });
+
         final String nightThemeKey = getString(R.string.night_theme_key);
         if (startThemeKey.equals(autoDeviceThemeKey)) {
             final String startNightThemeKey = defaultPreferences

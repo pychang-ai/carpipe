@@ -95,6 +95,7 @@ import org.schabi.newpipe.util.SerializedCache;
 import org.schabi.newpipe.util.ServiceHelper;
 import org.schabi.newpipe.util.StateSaver;
 import org.schabi.newpipe.util.ThemeHelper;
+import org.schabi.newpipe.util.UiScaleHelper;
 import org.schabi.newpipe.util.external_communication.ShareUtils;
 import org.schabi.newpipe.views.FocusOverlayView;
 
@@ -137,6 +138,11 @@ public class MainActivity extends AppCompatActivity {
     /*//////////////////////////////////////////////////////////////////////////
     // Activity's LifeCycle
     //////////////////////////////////////////////////////////////////////////*/
+
+    @Override
+    protected void attachBaseContext(final Context newBase) {
+        super.attachBaseContext(UiScaleHelper.wrapContext(newBase));
+    }
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
