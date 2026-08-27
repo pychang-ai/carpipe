@@ -36,3 +36,5 @@
 | 2026/08/27 | Android Auto 暫不處理 | PI 指示：待後續上車測試再議 |
 | 2026/08/27 | **不加入 YouTube／Google 帳號登入功能** | PI 提問「登入 Google 會不會把 YT 偏好帶進來」。答：不會，Drive 備份用的權限與 YouTube 資料完全分離。若要帶入須另接 YouTube Data API 並登入，等於把實名 Google 帳號綁到一個繞過廣告的用戶端，有帳號風險，也違背 NewPipe 零帳號設計（上游 issue #12500 已明確不做）。**改用 Google Takeout 一次性匯入訂閱**（Takeout → subscriptions.csv → 訂閱頁 Import from YouTube），零登入零風險 |
 | 2026/08/27 | 私人播放清單改設「不公開」而非登入取得 | 私人清單無登入拿不到；改為不公開後憑網址即可在 app 內開啟並加書籤，不必登入 |
+| 2026/08/27 | **完全不帶入任何 YouTube 帳號資料**（PI 拍板） | 不只不做帳號登入，連 Google Takeout 一次性匯入訂閱也不做。訂閱與播放清單一律在 app 內從零建立。理由：與 YouTube 帳號徹底切斷，無任何關聯風險 |
+| 2026/08/27 | 備份同步儲存位置＝Dropbox（PI 拍板） | 單一儲存來源、選配不強制。備份檔在 Apps 資料夾可見可自取，符合 PI 自己掌握檔案的習慣 |
