@@ -1,5 +1,11 @@
 .gradle/
 local.properties
+
+# signing keys must never be committed (public repo)
+*.jks
+*.keystore
+keystore.properties
+signing.properties
 .DS_Store
 **/build/
 !src/**/build/
