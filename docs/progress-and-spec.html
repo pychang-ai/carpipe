@@ -1,0 +1,393 @@
+<!-- artifact: https://claude.ai/code/artifact/8daab624-3fa6-4e34-9622-8d487341ef60 -->
+<title>carpipe 進度與規格</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@500;700&family=Noto+Sans+TC:wght@400;500;700&display=swap">
+
+<style>
+:root{
+  --ground:#F5F4F1; --surface:#FFFFFF; --sunk:#EDECE7;
+  --ink:#1B1A17; --ink-2:#403E37; --muted:#6E6C62; --rule:#DEDCD4; --rule-2:#CBC8BE;
+  --dab:#8A4B25;
+  --hem:#3F4C7C; --hem-soft:#E5E7F1;
+  --ok:#3D6650;  --ok-soft:#E3EDE6;
+  --warn:#8F6416; --warn-soft:#F6EDDA;
+  --bad:#963428; --bad-soft:#F6E4E1;
+
+  --display:"Noto Serif TC","Iowan Old Style","Palatino Linotype",Palatino,Georgia,serif;
+  --body:"Noto Sans TC","Segoe UI Variable Text","Microsoft JhengHei UI",system-ui,sans-serif;
+  --mono:"Cascadia Mono",Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --ground:#141519; --surface:#1D1E23; --sunk:#232429;
+    --ink:#E9E8E2; --ink-2:#C6C4BC; --muted:#95948B; --rule:#2E3037; --rule-2:#3C3F47;
+    --dab:#D08A5A; --hem:#93A0DA; --hem-soft:#1E2233;
+    --ok:#7FB394; --ok-soft:#1A2620;
+    --warn:#CFA85A; --warn-soft:#2C2416;
+    --bad:#D9796E; --bad-soft:#2E1C1A;
+  }
+}
+:root[data-theme="dark"]{
+  --ground:#141519; --surface:#1D1E23; --sunk:#232429;
+  --ink:#E9E8E2; --ink-2:#C6C4BC; --muted:#95948B; --rule:#2E3037; --rule-2:#3C3F47;
+  --dab:#D08A5A; --hem:#93A0DA; --hem-soft:#1E2233;
+  --ok:#7FB394; --ok-soft:#1A2620;
+  --warn:#CFA85A; --warn-soft:#2C2416;
+  --bad:#D9796E; --bad-soft:#2E1C1A;
+}
+
+body{
+  background:var(--ground); color:var(--ink);
+  font-family:var(--body); font-size:16px; line-height:1.75;
+  margin:0; padding:0;
+}
+.wrap{ max-width:960px; margin:0 auto; padding:48px 24px 96px; }
+
+.eyebrow{
+  font-size:12px; letter-spacing:.16em; text-transform:uppercase;
+  color:var(--muted); font-weight:700; margin:0 0 10px;
+}
+h1{
+  font-family:var(--display); font-weight:700; font-size:40px; line-height:1.25;
+  margin:0 0 8px; text-wrap:balance; color:var(--ink);
+}
+.sub{ color:var(--ink-2); margin:0 0 32px; max-width:62ch; }
+
+h2{
+  font-family:var(--display); font-size:26px; font-weight:700; line-height:1.3;
+  margin:0 0 4px; text-wrap:balance;
+  padding-bottom:10px; border-bottom:2px solid var(--dab);
+}
+h3{ font-family:var(--display); font-size:19px; font-weight:700; margin:0 0 2px; }
+section{ margin-top:56px; }
+.stack{ display:flex; flex-direction:column; gap:18px; }
+p{ margin:0; max-width:68ch; }
+.note{ color:var(--muted); font-size:14px; }
+
+.hero{
+  background:var(--surface); border:1px solid var(--rule);
+  border-top:4px solid var(--dab);
+  padding:28px 28px 24px; margin-bottom:36px;
+  display:flex; flex-wrap:wrap; gap:28px; align-items:baseline;
+}
+.hero .big{
+  font-family:var(--display); font-size:52px; font-weight:700; line-height:1;
+  color:var(--dab); font-variant-numeric:tabular-nums;
+}
+.hero .big small{ font-size:22px; color:var(--muted); font-weight:500; }
+.hero p{ flex:1 1 320px; margin:0; color:var(--ink-2); }
+
+.cards{ display:grid; grid-template-columns:repeat(auto-fit,minmax(210px,1fr)); gap:14px; }
+.verdict{
+  background:var(--surface); border:1px solid var(--rule); border-top:3px solid var(--rule-2);
+  padding:16px 18px; display:flex; flex-direction:column; gap:4px;
+}
+.verdict.ok{ border-top-color:var(--ok); }
+.verdict.warn{ border-top-color:var(--warn); }
+.verdict.wait{ border-top-color:var(--hem); }
+.verdict .q{ font-size:12px; letter-spacing:.1em; text-transform:uppercase; color:var(--muted); font-weight:700; }
+.verdict .a{ font-family:var(--display); font-size:20px; font-weight:700; }
+.verdict .why{ font-size:14px; color:var(--ink-2); line-height:1.6; }
+
+.tablebox{ overflow-x:auto; border:1px solid var(--rule); background:var(--surface); }
+table{ border-collapse:collapse; width:100%; min-width:640px; font-size:15px; }
+th,td{ text-align:left; padding:11px 14px; border-bottom:1px solid var(--rule); vertical-align:top; }
+th{
+  background:var(--sunk); font-size:12px; letter-spacing:.08em; text-transform:uppercase;
+  color:var(--muted); font-weight:700; white-space:nowrap;
+}
+tbody tr:last-child td{ border-bottom:none; }
+td.num{ font-variant-numeric:tabular-nums; white-space:nowrap; color:var(--muted); font-family:var(--mono); font-size:13px; }
+code{ font-family:var(--mono); font-size:13px; background:var(--sunk); padding:1px 5px; border:1px solid var(--rule); }
+
+.pill{
+  display:inline-block; font-size:12px; font-weight:700; padding:2px 9px;
+  white-space:nowrap; border:1px solid transparent;
+}
+.pill.done{ background:var(--ok-soft); color:var(--ok); border-color:var(--ok); }
+.pill.hold{ background:var(--warn-soft); color:var(--warn); border-color:var(--warn); }
+.pill.wait{ background:var(--hem-soft); color:var(--hem); border-color:var(--hem); }
+.pill.no{ background:var(--bad-soft); color:var(--bad); border-color:var(--bad); }
+
+.daily{
+  background:var(--hem-soft); border-left:4px solid var(--hem);
+  padding:16px 20px; display:flex; flex-direction:column; gap:6px;
+}
+.daily .tag{ font-size:12px; letter-spacing:.1em; color:var(--hem); font-weight:700; }
+.daily p{ color:var(--ink-2); }
+
+.honest{
+  background:var(--bad-soft); border:1px solid var(--bad);
+  padding:20px 24px; display:flex; flex-direction:column; gap:12px;
+}
+.honest h2{ border-bottom-color:var(--bad); color:var(--bad); margin-bottom:2px; }
+.honest ul{ margin:0; padding-left:20px; display:flex; flex-direction:column; gap:8px; }
+.honest li{ color:var(--ink-2); }
+
+ul.plain{ margin:0; padding-left:20px; display:flex; flex-direction:column; gap:6px; }
+ul.plain li{ color:var(--ink-2); }
+
+footer{ margin-top:64px; padding-top:18px; border-top:1px solid var(--rule); color:var(--muted); font-size:13px; }
+</style>
+
+<div class="wrap">
+
+  <p class="eyebrow">carpipe — NewPipe 公開 fork</p>
+  <h1>車上無廣告聽歌播放器：進度與功能規格</h1>
+  <p class="sub">給 PI 的兩張清單：已經做完的工作，以及這個 app 目前具備、即將具備、以及明確不做的功能。截至 2026 年 8 月 27 日。</p>
+
+  <div class="hero">
+    <div class="big">6<small> / 9 項完成</small></div>
+    <p>從建 repo 到兩項客製功能全部落地，編譯與上游程式碼規範檢查皆通過。剩下三項：一項等實車驗收，兩項等你拍板方向。</p>
+  </div>
+
+  <div class="cards">
+    <div class="verdict ok">
+      <span class="q">開發環境</span>
+      <span class="a">完全就緒</span>
+      <span class="why">這台電腦編譯得出可安裝的 APK，兩個環境坑已記錄解法。</span>
+    </div>
+    <div class="verdict warn">
+      <span class="q">兩項客製功能</span>
+      <span class="a">待實機驗證</span>
+      <span class="why">程式編得過不等於在手機上好用，需裝機實測。</span>
+    </div>
+    <div class="verdict wait">
+      <span class="q">測速警示整合</span>
+      <span class="a">等你選方向</span>
+      <span class="why">四種做法已評估完，成本從半天到兩週不等。</span>
+    </div>
+    <div class="verdict wait">
+      <span class="q">備份同步</span>
+      <span class="a">方向已定未實作</span>
+      <span class="why">確定走 Dropbox，單一來源、選配不強制。</span>
+    </div>
+  </div>
+
+  <section class="stack">
+    <h2>一、完成的工作清單</h2>
+    <p>九項任務中已結案六項。每項都標了對應的提交紀錄，日後要追是哪一次改的直接查得到。</p>
+
+    <div class="tablebox">
+      <table>
+        <thead>
+          <tr><th>#</th><th>任務</th><th>實際做了什麼</th><th>狀態</th><th>提交紀錄</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="num">0a</td>
+            <td>取得 GitHub Token</td>
+            <td>PI 提供帳號 pychang-ai 的存取權杖，僅用於推送程式碼，不寫入任何檔案。</td>
+            <td><span class="pill done">完成</span></td>
+            <td class="num">—</td>
+          </tr>
+          <tr>
+            <td class="num">0b</td>
+            <td>開源方式與命名</td>
+            <td>比較公開 fork 與私有 repo 後選公開：可一鍵同步上游、GPLv3 授權零疑慮、還能回饋修改給原專案。命名比了五案選 carpipe，跟隨 NewPipe 社群的 pipe 系命名慣例。</td>
+            <td><span class="pill done">完成</span></td>
+            <td class="num">—</td>
+          </tr>
+          <tr>
+            <td class="num">1</td>
+            <td>建立 repo</td>
+            <td>把官方 NewPipe 複製成自己的 carpipe，抓到本機，設好指向官方的來源連結以便日後拉更新，並在忽略清單補上簽名金鑰的防護規則，避免憑證誤傳到公開 repo。</td>
+            <td><span class="pill done">完成</span></td>
+            <td class="num">bd41857ae</td>
+          </tr>
+          <tr>
+            <td class="num">2</td>
+            <td>納入 time-master 管理</td>
+            <td>repo 內建進度表 PROGRESS.md 作為單一進度來源；TM 的核心 repo 清單新增一列登錄；操作紀錄寫入 ops log。</td>
+            <td><span class="pill done">完成</span></td>
+            <td class="num">TM 8aebc56</td>
+          </tr>
+          <tr>
+            <td class="num">3</td>
+            <td>建置驗證</td>
+            <td>不改任何程式碼先確認能編譯，產出 32.3 MB 的測試版 APK。過程踩兩個坑並記入問題記錄：新複製的專案要自建設定檔指向本機 Android SDK，以及編譯前要把 Java 指向 Android Studio 內建版本。</td>
+            <td><span class="pill done">完成</span></td>
+            <td class="num">c78219bbf</td>
+          </tr>
+          <tr>
+            <td class="num">4</td>
+            <td>循環鍵改造</td>
+            <td>在主播放列加一顆循環鍵、關閉時半透明、並把選擇記進設定檔跨次沿用。詳見下一節規格。</td>
+            <td><span class="pill done">完成</span></td>
+            <td class="num">f4033b727</td>
+          </tr>
+          <tr>
+            <td class="num">5</td>
+            <td>介面縮放設定</td>
+            <td>外觀設定新增四段縮放，文字與按鈕等比例一起放大。詳見下一節規格。</td>
+            <td><span class="pill done">完成</span></td>
+            <td class="num">f4033b727</td>
+          </tr>
+          <tr>
+            <td class="num">6</td>
+            <td>車上驗收</td>
+            <td>有線加藍牙接車機音響實測一週，驗循環、背景播放與大字操作，問題回填進度表建新任務。</td>
+            <td><span class="pill hold">未開始</span></td>
+            <td class="num">—</td>
+          </tr>
+          <tr>
+            <td class="num">7</td>
+            <td>測速警示整合</td>
+            <td>四案評估完成待拍板。查證結果：台灣沒有現成的開源測速 app，但警政署的固定式測速點是政府開放資料可自由使用。</td>
+            <td><span class="pill wait">待拍板</span></td>
+            <td class="num">—</td>
+          </tr>
+          <tr>
+            <td class="num">8</td>
+            <td>備份同步</td>
+            <td>盤點過 Google、Dropbox、OneDrive、GitHub、Syncthing、LINE、Discord 七種服務後拍板走 Dropbox，尚未實作。</td>
+            <td><span class="pill wait">方向已定</span></td>
+            <td class="num">—</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3>過程中拍板的九條決策</h3>
+    <div class="tablebox">
+      <table>
+        <thead><tr><th>決策</th><th>理由</th></tr></thead>
+        <tbody>
+          <tr><td>改裝現成的 NewPipe，不自己從零寫</td><td>車上聽歌要的功能它大多內建，改缺口比重造快得多。</td></tr>
+          <tr><td>公開 fork，不做私有 repo</td><td>省掉手動同步上游的工夫，授權零疑慮，沒有需要藏的內容。</td></tr>
+          <tr><td>命名 carpipe</td><td>短、好記，跟隨 NewPipe 社群命名慣例，圈內人一看就懂定位。</td></tr>
+          <tr><td>不做 YouTube 或 Google 帳號登入</td><td>登入等於把實名帳號綁到一個繞過廣告的用戶端，換來的只是省下重新訂閱的手續，不划算。</td></tr>
+          <tr><td>完全不帶入任何 YouTube 帳號資料</td><td>連一次性匯入訂閱也不做，與 YouTube 帳號徹底切斷。</td></tr>
+          <tr><td>私人播放清單改設為不公開</td><td>不公開的清單憑網址就能在 app 內開啟並加書籤，不必登入。</td></tr>
+          <tr><td>備份走 Dropbox 單一來源</td><td>你已經在用，備份檔在 Apps 資料夾看得到也抓得到，而且只需授權一次。</td></tr>
+          <tr><td>不抓取神盾的社群資料</td><td>那是該公司使用者累積的營運資產，涉及服務條款與法律風險，技術上也會因對方改版而失效。</td></tr>
+          <tr><td>Android Auto 暫不處理</td><td>PI 指示待實車測試後再議。</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="stack">
+    <h2>二、APP 功能規格清單</h2>
+    <p>分成四塊看：裝上去就有的、這次做出來的、規劃中的、以及明確不做的。第四塊同樣是規格的一部分——講清楚不做什麼，日後才不會反覆討論同一題。</p>
+
+    <h3>A　承襲自 NewPipe，不必開發就有</h3>
+    <div class="tablebox">
+      <table>
+        <thead><tr><th>功能</th><th>對車上聽歌的意義</th></tr></thead>
+        <tbody>
+          <tr><td>無廣告播放</td><td>不經官方播放器取得串流，所以串流本身就不含廣告，不是靠過濾規則擋。</td></tr>
+          <tr><td>搜尋與頻道訂閱</td><td>訂閱存在手機本機，不掛任何帳號。</td></tr>
+          <tr><td>背景與鎖螢幕播放</td><td>螢幕關掉繼續放，這是車上最基本的需求。</td></tr>
+          <tr><td>純音訊模式</td><td>只抓聲音不抓畫面，長途通勤省下大量行動網路流量。</td></tr>
+          <tr><td>播放佇列與本機播放清單</td><td>可自建車用歌單，且清單存在本機不受 YouTube 端變動影響。</td></tr>
+          <tr><td>通知列與藍牙媒體鍵控制</td><td>方向盤或車機的播放暫停鍵可直接控制。</td></tr>
+          <tr><td>離線下載</td><td>在家先載好，隧道或收訊差的路段照樣有聲音。</td></tr>
+          <tr><td>觀看紀錄</td><td>本機累積，不上傳。</td></tr>
+          <tr><td>資料匯出與匯入</td><td>設定內建，可把訂閱與設定打包成壓縮檔存到任意位置。</td></tr>
+          <tr><td>零帳號、無演算法追蹤</td><td>開了就能用，沒有登入畫面擋在前面。</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3>B　carpipe 本次新增</h3>
+    <div class="tablebox">
+      <table>
+        <thead><tr><th>功能</th><th>解決什麼問題</th><th>怎麼做的</th></tr></thead>
+        <tbody>
+          <tr>
+            <td><b>主播放列循環鍵</b></td>
+            <td>原版的循環鍵藏在要另外拉開的播放佇列面板裡，這是它一直很難找的原因。</td>
+            <td>在上一首、播放、下一首旁邊加一顆同尺寸的循環鍵，三態依序切換：關閉、單曲循環、整列循環。</td>
+          </tr>
+          <tr>
+            <td><b>循環狀態一眼可辨</b></td>
+            <td>光看圖示細節在行車中根本分不出開或關。</td>
+            <td>關閉時按鍵半透明、開啟時全亮，瞄一眼就知道。</td>
+          </tr>
+          <tr>
+            <td><b>循環模式跨次記憶</b></td>
+            <td>原版每次重開播放器就重置成關閉，等於每次上車都要重按一次。</td>
+            <td>按下的選擇寫進設定檔，下次開 app 甚至重開機後自動套用。</td>
+          </tr>
+          <tr>
+            <td><b>介面縮放四段</b></td>
+            <td>原版字太小，不只看不清楚，按鈕也不好按。</td>
+            <td>設定的外觀頁新增 100%、115%、130%、150% 四段，文字與按鈕等比例一起放大，改選後畫面立刻重繪。</td>
+          </tr>
+          <tr>
+            <td>小視窗播放器維持原樣</td>
+            <td>浮動小視窗畫面太小，多一顆鍵會擠。</td>
+            <td>該模式下不顯示新增的循環鍵。</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="daily">
+      <b class="tag">日常例子</b>
+      <p>介面縮放的原理，等同 Android 系統設定裡的「顯示大小」那個滑桿——它會把整個畫面的字和按鈕一起放大，而不是只有字變大、按鈕還是原來那麼小。差別在於系統那個滑桿一動，全手機的 app 都跟著變；carpipe 這個只作用在這一個 app，其他 app 不受影響。</p>
+    </div>
+
+    <h3>C　已規劃、尚未實作</h3>
+    <div class="tablebox">
+      <table>
+        <thead><tr><th>功能</th><th>選項與成本</th><th>狀態</th></tr></thead>
+        <tbody>
+          <tr>
+            <td><b>測速警示</b></td>
+            <td>四案：內建固定式警示模組約三到五天；只做一鍵同時啟動神盾與播放清單約半天；先做後者實測再決定要不要做前者；或 fork 開源導航（不建議）。社群回報再延伸出三個層級，其中本地標記加雲端備份對自用最划算。</td>
+            <td><span class="pill wait">待拍板</span></td>
+          </tr>
+          <tr>
+            <td><b>Dropbox 備份同步</b></td>
+            <td>設計原則已定：單一儲存來源、設定頁內選配、絕不在開 app 時強制登入、授權一次之後自動續期。零成本的過渡做法是先用現成的匯出功能加系統自動備份。</td>
+            <td><span class="pill wait">方向已定</span></td>
+          </tr>
+          <tr>
+            <td>車上實測回填的改進</td>
+            <td>實車跑一週後才知道還缺什麼，屆時逐項建成新任務。</td>
+            <td><span class="pill hold">未開始</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3>D　明確不做</h3>
+    <div class="tablebox">
+      <table>
+        <thead><tr><th>不做的事</th><th>原因</th></tr></thead>
+        <tbody>
+          <tr><td><span class="pill no">不做</span> YouTube 或 Google 帳號登入</td><td>帳號風險換不到相稱的好處。</td></tr>
+          <tr><td><span class="pill no">不做</span> 帶入 YouTube 的訂閱、清單或觀看紀錄</td><td>PI 拍板徹底切斷，連一次性匯入也不做。</td></tr>
+          <tr><td><span class="pill no">不做</span> 抓取神盾的社群回報資料</td><td>他人營運資產，涉服務條款與法律風險。</td></tr>
+          <tr><td><span class="pill no">不做</span> 用 LINE 或 Discord 當儲存空間</td><td>兩者都只提供身分驗證不提供檔案儲存；LINE 的雲端空間已於 2024 年終止，Discord 的檔案連結約 24 小時就失效。</td></tr>
+          <tr><td><span class="pill hold">暫緩</span> Android Auto 支援</td><td>非官方用戶端上不了車機螢幕，待實車測試後再議。</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3>E　貫穿全案的設計約束</h3>
+    <ul class="plain">
+      <li><b>零帳號可用。</b>任何同步或帳號功能都只能是設定頁裡的選配，不得擋在主流程前面——上車就要出聲音，最不想遇到的就是「請先登入」。</li>
+      <li><b>維持與上游可合併。</b>不引入 Google Play 服務相依性，否則會破壞 NewPipe 去 Google 化的架構，日後拉官方更新也更容易衝突。</li>
+      <li><b>公開 repo 不放任何憑證。</b>簽名金鑰與日後的授權設定一律排除在版控之外。</li>
+      <li><b>每次停工必盤點。</b>更新進度表、把當下沒解的問題轉成新任務、提交推送、並在 TM 的操作紀錄追加一行。</li>
+    </ul>
+  </section>
+
+  <section class="stack honest">
+    <h2>三、必須說清楚的三件事</h2>
+    <ul>
+      <li><b>任務 4 與 5 只通過編譯，還沒在手機上跑過。</b>編譯成功與程式碼規範檢查通過，都只證明程式寫得合法，不證明在車上好用。尤其 150% 縮放可能讓部分畫面變得擁擠，這要實機才看得出來。</li>
+      <li><b>測試版 APK 無法直接傳給你。</b>檔案 38.5 MB，超過對話 30 MB 的傳輸上限。檔案在本機 <code>carpipe\app\build\outputs\apk\debug\app-debug.apk</code>，用 USB 或 Dropbox 傳到手機安裝；或把手機接上電腦，我用指令直接裝。</li>
+      <li><b>測速的政府開放資料還沒實際下載驗證。</b>三項確認目前是：公開 ✅ 政府開放授權、可下載 ✅ 有官方管道、已測試可執行 ❌ 尚未實跑。在真正動工任務 7 之前，第三項不得標成通過。</li>
+    </ul>
+  </section>
+
+  <footer>
+    carpipe — NewPipe 公開 fork，GPLv3。進度單一事實來源為 repo 根目錄的 <code>PROGRESS.md</code>；本報告為 2026-08-27 的整理，後續工作會推翻其中的數字。
+  </footer>
+
+</div>
