@@ -34,3 +34,5 @@
 | 2026/08/27 | 公開 fork（不走私有 repo） | 一鍵同步上游、GPLv3 零疑慮、可回饋 PR；無需要藏的內容 |
 | 2026/08/27 | 命名 carpipe | 跟隨 NewPipe 社群 pipe 系命名慣例，短好記 |
 | 2026/08/27 | Android Auto 暫不處理 | PI 指示：待後續上車測試再議 |
+| 2026/08/27 | **不加入 YouTube／Google 帳號登入功能** | PI 提問「登入 Google 會不會把 YT 偏好帶進來」。答：不會，Drive 備份用的權限與 YouTube 資料完全分離。若要帶入須另接 YouTube Data API 並登入，等於把實名 Google 帳號綁到一個繞過廣告的用戶端，有帳號風險，也違背 NewPipe 零帳號設計（上游 issue #12500 已明確不做）。**改用 Google Takeout 一次性匯入訂閱**（Takeout → subscriptions.csv → 訂閱頁 Import from YouTube），零登入零風險 |
+| 2026/08/27 | 私人播放清單改設「不公開」而非登入取得 | 私人清單無登入拿不到；改為不公開後憑網址即可在 app 內開啟並加書籤，不必登入 |
