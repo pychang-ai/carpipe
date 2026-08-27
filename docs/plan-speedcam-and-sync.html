@@ -1,0 +1,259 @@
+<!-- artifact: https://claude.ai/code/artifact/e2dd4349-8221-41eb-b9c4-407590d7a6af -->
+<title>測速警示與 Dropbox 同步施工計畫</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@500;700&family=Noto+Sans+TC:wght@400;500;700&display=swap">
+
+<style>
+:root{
+  --ground:#F5F4F1; --surface:#FFFFFF; --sunk:#EDECE7;
+  --ink:#1B1A17; --ink-2:#403E37; --muted:#6E6C62; --rule:#DEDCD4; --rule-2:#CBC8BE;
+  --dab:#8A4B25;
+  --hem:#3F4C7C; --hem-soft:#E5E7F1;
+  --ok:#3D6650;  --ok-soft:#E3EDE6;
+  --warn:#8F6416; --warn-soft:#F6EDDA;
+  --bad:#963428; --bad-soft:#F6E4E1;
+
+  --display:"Noto Serif TC","Iowan Old Style","Palatino Linotype",Palatino,Georgia,serif;
+  --body:"Noto Sans TC","Segoe UI Variable Text","Microsoft JhengHei UI",system-ui,sans-serif;
+  --mono:"Cascadia Mono",Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --ground:#141519; --surface:#1D1E23; --sunk:#232429;
+    --ink:#E9E8E2; --ink-2:#C6C4BC; --muted:#95948B; --rule:#2E3037; --rule-2:#3C3F47;
+    --dab:#D08A5A; --hem:#93A0DA; --hem-soft:#1E2233;
+    --ok:#7FB394; --ok-soft:#1A2620;
+    --warn:#CFA85A; --warn-soft:#2C2416;
+    --bad:#D9796E; --bad-soft:#2E1C1A;
+  }
+}
+:root[data-theme="dark"]{
+  --ground:#141519; --surface:#1D1E23; --sunk:#232429;
+  --ink:#E9E8E2; --ink-2:#C6C4BC; --muted:#95948B; --rule:#2E3037; --rule-2:#3C3F47;
+  --dab:#D08A5A; --hem:#93A0DA; --hem-soft:#1E2233;
+  --ok:#7FB394; --ok-soft:#1A2620;
+  --warn:#CFA85A; --warn-soft:#2C2416;
+  --bad:#D9796E; --bad-soft:#2E1C1A;
+}
+
+body{ background:var(--ground); color:var(--ink); font-family:var(--body); font-size:16px; line-height:1.75; margin:0; }
+.wrap{ max-width:960px; margin:0 auto; padding:48px 24px 96px; }
+
+.eyebrow{ font-size:12px; letter-spacing:.16em; text-transform:uppercase; color:var(--muted); font-weight:700; margin:0 0 10px; }
+h1{ font-family:var(--display); font-weight:700; font-size:40px; line-height:1.25; margin:0 0 8px; text-wrap:balance; }
+.sub{ color:var(--ink-2); margin:0 0 32px; max-width:64ch; }
+h2{ font-family:var(--display); font-size:26px; font-weight:700; line-height:1.3; margin:0 0 4px; text-wrap:balance; padding-bottom:10px; border-bottom:2px solid var(--dab); }
+h3{ font-family:var(--display); font-size:19px; font-weight:700; margin:14px 0 2px; }
+section{ margin-top:56px; }
+.stack{ display:flex; flex-direction:column; gap:18px; }
+p{ margin:0; max-width:68ch; }
+
+.hero{ background:var(--surface); border:1px solid var(--rule); border-top:4px solid var(--dab); padding:28px; margin-bottom:32px; display:flex; flex-wrap:wrap; gap:28px; align-items:baseline; }
+.hero .big{ font-family:var(--display); font-size:52px; font-weight:700; line-height:1; color:var(--dab); font-variant-numeric:tabular-nums; }
+.hero .big small{ font-size:20px; color:var(--muted); font-weight:500; }
+.hero p{ flex:1 1 320px; color:var(--ink-2); }
+
+.tablebox{ overflow-x:auto; border:1px solid var(--rule); background:var(--surface); }
+table{ border-collapse:collapse; width:100%; min-width:660px; font-size:15px; }
+th,td{ text-align:left; padding:11px 14px; border-bottom:1px solid var(--rule); vertical-align:top; }
+th{ background:var(--sunk); font-size:12px; letter-spacing:.08em; text-transform:uppercase; color:var(--muted); font-weight:700; white-space:nowrap; }
+tbody tr:last-child td{ border-bottom:none; }
+td.num{ font-variant-numeric:tabular-nums; white-space:nowrap; color:var(--muted); font-family:var(--mono); font-size:13px; }
+code{ font-family:var(--mono); font-size:13px; background:var(--sunk); padding:1px 5px; border:1px solid var(--rule); }
+
+.pill{ display:inline-block; font-size:12px; font-weight:700; padding:2px 9px; white-space:nowrap; border:1px solid transparent; }
+.pill.rec{ background:var(--ok-soft); color:var(--ok); border-color:var(--ok); }
+.pill.opt{ background:var(--hem-soft); color:var(--hem); border-color:var(--hem); }
+.pill.risk{ background:var(--warn-soft); color:var(--warn); border-color:var(--warn); }
+
+.decide{ background:var(--hem-soft); border-left:4px solid var(--hem); padding:16px 20px; display:flex; flex-direction:column; gap:6px; }
+.decide .tag{ font-size:12px; letter-spacing:.1em; color:var(--hem); font-weight:700; }
+.decide p{ color:var(--ink-2); }
+
+.daily{ background:var(--hem-soft); border-left:4px solid var(--hem); padding:16px 20px; display:flex; flex-direction:column; gap:6px; }
+.daily .tag{ font-size:12px; letter-spacing:.1em; color:var(--hem); font-weight:700; }
+.daily p{ color:var(--ink-2); }
+
+.honest{ background:var(--bad-soft); border:1px solid var(--bad); padding:20px 24px; display:flex; flex-direction:column; gap:12px; }
+.honest h2{ border-bottom-color:var(--bad); color:var(--bad); margin-bottom:2px; }
+.honest ul{ margin:0; padding-left:20px; display:flex; flex-direction:column; gap:8px; }
+.honest li{ color:var(--ink-2); }
+
+ul.plain{ margin:0; padding-left:20px; display:flex; flex-direction:column; gap:6px; }
+ul.plain li{ color:var(--ink-2); }
+
+.flow{ display:grid; grid-template-columns:repeat(auto-fit,minmax(180px,1fr)); gap:12px; }
+.step{ background:var(--surface); border:1px solid var(--rule); border-top:3px solid var(--dab); padding:14px 16px; display:flex; flex-direction:column; gap:4px; }
+.step .n{ font-family:var(--mono); font-size:12px; color:var(--muted); }
+.step .t{ font-family:var(--display); font-size:17px; font-weight:700; }
+.step .d{ font-size:14px; color:var(--ink-2); line-height:1.6; }
+
+footer{ margin-top:64px; padding-top:18px; border-top:1px solid var(--rule); color:var(--muted); font-size:13px; }
+</style>
+
+<div class="wrap">
+
+  <p class="eyebrow">carpipe 任務 7 與任務 8</p>
+  <h1>測速警示與 Dropbox 同步：動工前的施工計畫</h1>
+  <p class="sub">兩項都還沒開始寫程式。這份是準備好的工作清單與待你決定的事項，你拍板後我就照表施工。兩項做完你再上車測試。</p>
+
+  <div class="hero">
+    <div class="big">8<small> 個待你決定</small></div>
+    <p>測速警示五個、Dropbox 同步三個。每個都給了建議選項，你可以只回「照建議做」，也可以逐項改。工程量合計約六到九個工作天。</p>
+  </div>
+
+  <div class="decide">
+    <b class="tag">最重要的一個決定</b>
+    <p>測速警示的規模差距最大：只做「一鍵同時打開神盾和音樂」約半天就好，做「app 內建固定式測速警示」約四到六天。前者保留神盾的流動測速與社群回報，後者換來單一 app 的清爽。這一項先定，其餘都跟著它走。</p>
+  </div>
+
+  <section class="stack">
+    <h2>任務 7　測速警示</h2>
+
+    <h3>待你決定的五件事</h3>
+    <div class="tablebox">
+      <table>
+        <thead><tr><th>編號</th><th>要決定什麼</th><th>選項</th><th>我的建議</th></tr></thead>
+        <tbody>
+          <tr>
+            <td class="num">D7-1</td>
+            <td>做到什麼程度</td>
+            <td>甲、只做一鍵同時啟動神盾與播放清單<br>乙、app 內建固定式測速警示，神盾退場<br>丙、先做甲上車測，再決定要不要做乙</td>
+            <td><span class="pill rec">建議丙</span> 半天就能解掉「開兩個 app」的痛點，內建版值不值得做，實車跑過才知道。</td>
+          </tr>
+          <tr>
+            <td class="num">D7-2</td>
+            <td>怎麼警示你</td>
+            <td>甲、語音報讀「前方 500 公尺測速，限速 60」<br>乙、單純提示音<br>丙、語音加提示音</td>
+            <td><span class="pill rec">建議甲</span> 車上不看螢幕，語音能同時給距離與速限；且警示時自動壓低音樂音量，講完恢復。</td>
+          </tr>
+          <tr>
+            <td class="num">D7-3</td>
+            <td>提前多遠警示</td>
+            <td>固定 300 公尺／固定 500 公尺／依速限自動調整（市區短、國道長）</td>
+            <td><span class="pill rec">建議依速限</span> 國道 500 公尺才來得及反應，市區 500 公尺又太早。設定頁仍可手動改。</td>
+          </tr>
+          <tr>
+            <td class="num">D7-4</td>
+            <td>要不要記自己的點</td>
+            <td>甲、不記，只用政府資料<br>乙、播放畫面加一顆大按鈕，按一下記下目前位置（流動測速、臨檢）<br>丙、開放給別人一起回報</td>
+            <td><span class="pill rec">建議乙</span> 你的通勤路線固定，跑幾趟就把熱點標齊；丙需要用戶基數，自用不划算。</td>
+          </tr>
+          <tr>
+            <td class="num">D7-5</td>
+            <td>什麼時候開定位</td>
+            <td>甲、手動開關「行車模式」<br>乙、偵測到藍牙連上車機自動開<br>丙、一直開著</td>
+            <td><span class="pill rec">建議乙</span> 上車連上藍牙就自動啟動、下車自動關，不必記得按，也不會平時一直吃電。</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3>工作清單（選乙或丙的內建版本）</h3>
+    <div class="tablebox">
+      <table>
+        <thead><tr><th>#</th><th>工作</th><th>內容與產出</th><th>預估</th></tr></thead>
+        <tbody>
+          <tr><td class="num">7.1</td><td>資料取得與驗證</td><td>下載警政署的測速執法設置點與國道測速點兩份開放資料，檢查筆數、欄位是否齊全、座標系統為何、有無重複與空值。產出一份確認過的資料檔與檢查報告。<b>這一步做完才知道後面做不做得下去。</b></td><td>0.5 天</td></tr>
+          <tr><td class="num">7.2</td><td>資料內建與更新</td><td>把驗證過的資料轉成 app 內的查詢資料庫，並設計更新方式：每次改版隨 app 更新，或設定頁提供手動更新按鈕。</td><td>0.5 天</td></tr>
+          <tr><td class="num">7.3</td><td>定位與行車模式</td><td>取得定位權限、建立行車模式（依 D7-5 決定觸發方式）、控制定位更新頻率以省電。</td><td>1 天</td></tr>
+          <tr><td class="num">7.4</td><td>前方測速點判斷</td><td>依目前位置、行進方向與速度，找出前方警示距離內的測速點；用方向過濾掉對向車道的點，避免誤報。</td><td>1 天</td></tr>
+          <tr><td class="num">7.5</td><td>語音警示與音量閃避</td><td>警示時把音樂音量自動壓低、播報完恢復；同一個測速點在一次行程中只報一次，避免塞車時重複轟炸。</td><td>1 天</td></tr>
+          <tr><td class="num">7.6</td><td>設定與測試鍵</td><td>設定頁提供總開關、警示距離、語音音量，以及一顆「試聽警示」按鈕讓你在家就能確認音量合適。</td><td>0.5 天</td></tr>
+          <tr><td class="num">7.7</td><td>自我標記（若選 D7-4 乙）</td><td>播放畫面加一顆可盲按的大按鈕記錄目前位置，標記存進本機資料庫並與政府資料一起參與警示判斷。</td><td>1 天</td></tr>
+          <tr><td class="num">7.8</td><td>模擬驗證</td><td>用模擬座標在電腦上重播一段路線，確認警示時機與方向過濾正確，不必為了測試一直開車出去。</td><td>0.5 天</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>合計約 <b>四到六個工作天</b>。若只做甲案（一鍵並行啟動），僅需 7.6 的一小部分，約半天。</p>
+
+    <h3>已知的三個技術風險</h3>
+    <ul class="plain">
+      <li><span class="pill risk">風險</span> <b>座標系統可能要轉換。</b>政府資料有些用的是台灣本地的平面座標而非手機用的經緯度，若是如此需先換算，否則警示位置會整個偏掉。7.1 就是為了先確認這件事。</li>
+      <li><span class="pill risk">風險</span> <b>背景定位權限。</b>Android 對背景取得位置管制嚴格，實作時要走正確的權限流程，否則螢幕關掉就收不到位置、警示會失效。</li>
+      <li><span class="pill risk">風險</span> <b>只有固定式，沒有流動式。</b>開放資料先天不含流動測速，這是自建方案的天花板，也是 D7-4 建議加自我標記的原因。</li>
+    </ul>
+  </section>
+
+  <section class="stack">
+    <h2>任務 8　Dropbox 備份同步</h2>
+
+    <p>好消息先講：Dropbox 的授權方式支援一種不需要「應用程式密鑰」的流程，也就是<b>公開 repo 裡沒有任何機密需要藏</b>，這是先前擔心的問題，現在確認不成立。</p>
+
+    <h3>待你決定的三件事</h3>
+    <div class="tablebox">
+      <table>
+        <thead><tr><th>編號</th><th>要決定什麼</th><th>選項</th><th>我的建議</th></tr></thead>
+        <tbody>
+          <tr>
+            <td class="num">D8-1</td>
+            <td>什麼時候備份</td>
+            <td>甲、設定頁按一下才備份<br>乙、每天自動一次<br>丙、資料有變動就自動備份</td>
+            <td><span class="pill rec">建議乙加甲</span> 每天自動一次足夠，另外保留手動按鈕給你要換手機前立刻備一份。丙太頻繁，一直上傳沒有意義。</td>
+          </tr>
+          <tr>
+            <td class="num">D8-2</td>
+            <td>保留幾份</td>
+            <td>甲、只留最新一份<br>乙、保留最近 7 份，自動刪更舊的</td>
+            <td><span class="pill rec">建議乙</span> 只留一份的風險是：若某次資料已經壞了才備份，好的那份就被蓋掉了。留七份等於有一週的後悔空間。</td>
+          </tr>
+          <tr>
+            <td class="num">D8-3</td>
+            <td>先做哪一步</td>
+            <td>甲、直接做 app 內建的 Dropbox 同步<br>乙、先用現成的匯出功能手動備一份，之後再做內建版</td>
+            <td><span class="pill rec">建議乙先擋著</span> 現成匯出十分鐘就能做完，等於今天就有一份保險；內建版照常做，兩者不衝突。</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3>工作清單</h3>
+    <div class="tablebox">
+      <table>
+        <thead><tr><th>#</th><th>工作</th><th>內容與產出</th><th>預估</th></tr></thead>
+        <tbody>
+          <tr><td class="num">8.1</td><td>註冊 Dropbox 應用程式</td><td>在 Dropbox 開發者後台建立一個應用程式，權限限定為「只能存取自己的專屬資料夾」，取得識別碼。<b>需要你用自己的 Dropbox 帳號登入操作一次</b>，我可以把步驟寫成一頁對照著點。</td><td>0.5 天</td></tr>
+          <tr><td class="num">8.2</td><td>授權流程</td><td>用系統瀏覽器完成一次授權，之後的憑證加密存在手機本機並自動續期，你不會再被要求登入。</td><td>1 天</td></tr>
+          <tr><td class="num">8.3</td><td>上傳備份</td><td>沿用 app 既有的資料庫匯出功能產生備份檔，上傳到 Dropbox 的專屬資料夾，檔名帶日期時間。</td><td>1 天</td></tr>
+          <tr><td class="num">8.4</td><td>自動排程與份數管理</td><td>依 D8-1 的頻率自動備份，依 D8-2 保留份數並自動清理過舊的檔案。</td><td>0.5 天</td></tr>
+          <tr><td class="num">8.5</td><td>還原流程</td><td>設定頁列出雲端上的備份、選一份下載、還原進 app。換手機時就靠這一步。</td><td>1 天</td></tr>
+          <tr><td class="num">8.6</td><td>設定介面與狀態顯示</td><td>備份開關、立即備份、上次備份時間、目前連結的帳號，以及解除連結。</td><td>0.5 天</td></tr>
+          <tr><td class="num">8.7</td><td>錯誤處理</td><td>沒網路、授權過期、空間不足都要給看得懂的訊息並可重試。<b>絕不靜默失敗</b>——備份最糟的情況是你以為有備份，其實三個月前就斷了。</td><td>0.5 天</td></tr>
+          <tr><td class="num">8.8</td><td>換機驗證</td><td>實際做一次完整流程：備份、清除資料、還原，確認訂閱與播放清單原封不動回來。</td><td>0.5 天</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>合計約 <b>五到六個工作天</b>。</p>
+
+    <div class="daily">
+      <b class="tag">日常例子</b>
+      <p>「只能存取自己的專屬資料夾」這個權限，就像你把備份鑰匙交給大樓管理員，但那把鑰匙只開你家門口那個信箱，開不了大門也開不了別戶。carpipe 拿到的授權只碰得到 Dropbox 裡屬於它的那個資料夾，你其他的檔案它讀不到。</p>
+    </div>
+  </section>
+
+  <section class="stack">
+    <h2>施工順序</h2>
+    <p>依你的指示，兩項都完成後才上車測試，所以原本排在前面的車上驗收往後移。</p>
+    <div class="flow">
+      <div class="step"><span class="n">現在</span><span class="t">你拍板</span><span class="d">回覆八個決定，或直接說「照建議做」。</span></div>
+      <div class="step"><span class="n">第一階段</span><span class="t">Dropbox 同步</span><span class="d">先做這項，因為它與測速無關、風險低，且做完你就有資料保險。</span></div>
+      <div class="step"><span class="n">第二階段</span><span class="t">測速警示</span><span class="d">先跑 7.1 驗資料，資料過關才往下做，不過關當場回報改走甲案。</span></div>
+      <div class="step"><span class="n">最後</span><span class="t">你上車測試</span><span class="d">循環、大字、測速警示、藍牙控制一次驗完，問題回填建新任務。</span></div>
+    </div>
+  </section>
+
+  <section class="stack honest">
+    <h2>三件必須先說清楚的事</h2>
+    <ul>
+      <li><b>測速資料還沒實際下載過。</b>三項確認目前是：公開 ✅、可下載 ✅、已測試可執行 ❌。7.1 沒跑完之前，內建警示的可行性不能算數，工期估算也可能因為座標轉換而增加。</li>
+      <li><b>8.1 需要你本人操作一次。</b>註冊 Dropbox 應用程式要用你的帳號登入，我無法代勞；其餘步驟我可以全部完成。</li>
+      <li><b>前面兩項客製功能仍未實機驗證。</b>循環鍵與介面縮放目前只通過編譯，建議在動工這兩項之前先把測試版裝到手機上跑一次，免得問題累積到最後才一起爆出來。</li>
+    </ul>
+  </section>
+
+  <footer>
+    carpipe 任務 7 與任務 8 施工計畫，2026-08-27。進度單一事實來源為 repo 根目錄的 <code>PROGRESS.md</code>；拍板後本表會拆成子任務寫入該檔追蹤。
+  </footer>
+
+</div>
