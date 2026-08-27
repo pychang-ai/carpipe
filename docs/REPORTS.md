@@ -1,6 +1,6 @@
 # HTML 報告索引　carpipe
 
-> 由 `tools/index-reports.py` 產生，共 1 份。
+> 由 `tools/index-reports.py` 產生，共 2 份。
 > 新增或更新報告後重跑一次即可，不要手動編輯此檔。
 
 > **看日期**：`更新` 是該檔最後一次 commit 的日期。
@@ -9,6 +9,7 @@
 | 更新 | 建立 | 報告 | 講什麼 | 檔案 |
 |---|---|---|---|---|
 | 2026-08-27 | 2026-08-27 | **[carpipe 進度與規格](https://claude.ai/code/artifact/8daab624-3fa6-4e34-9622-8d487341ef60)** | 給 PI 的兩張清單：已經做完的工作，以及這個 app 目前具備、即將具備、以及明確不做的功能。截至 2026 年 8 月 27 日。 | `docs/progress-and-spec.html` |
+| 2026-08-27 | 2026-08-27 | **[測速警示與 Dropbox 同步施工計畫](https://claude.ai/code/artifact/e2dd4349-8221-41eb-b9c4-407590d7a6af)** | 兩項都還沒開始寫程式。這份是準備好的工作清單與待你決定的事項，你拍板後我就照表施工。兩項做完你再上車測試。 | `docs/plan-speedcam-and-sync.html` |
 
 ## 沒有網址的那些
 
