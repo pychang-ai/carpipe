@@ -52,6 +52,12 @@
     <string name="speedcam_distance_near">較晚，接近才提醒</string>
     <string name="speedcam_distance_normal">標準</string>
     <string name="speedcam_distance_far">較早，提前提醒</string>
+    <string name="speedcam_update_data_title">更新測速資料</string>
+    <string name="speedcam_update_data_summary">每月在 Wi-Fi 下自動檢查。上次更新：%1$s</string>
+    <string name="speedcam_update_data_shipped">目前使用此版本內建的資料</string>
+    <string name="speedcam_update_working">正在取得測速資料…</string>
+    <string name="speedcam_update_done">測速資料已更新：%1$d 個測速點</string>
+    <string name="speedcam_update_failed">測速資料更新失敗：%1$s。手機上原有的資料仍繼續使用。</string>
     <string name="speedcam_test_title">立即試聽警示</string>
     <string name="speedcam_test_summary">播放一次警示，讓你在開車前把音量調好</string>
     <string name="speedcam_alert_with_limit">前方 %1$d 公尺測速，限速 %2$d</string>

@@ -1,0 +1,54 @@
+# Refreshes the speed camera list from the police open data.
+#
+# The published file is checked before it is committed, so a bad row never reaches a phone:
+# the same script that found a Miaoli camera sitting in the sea on 2026-08-28 runs here.
+# Nothing is committed when the data has not changed.
+
+name: Update speed camera data
+
+on:
+  schedule:
+    # Mondays at 04:00 Taiwan time, which is Sunday 20:00 UTC
+    - cron: "0 20 * * 0"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install pandas
+        run: pip install --quiet pandas
+
+      - name: Download the police data
+        run: |
+          curl --fail --silent --show-error --location \
+            --output data/speedcam/nationwide.csv \
+            "$(cat data/speedcam/fetch.txt)"
+
+      - name: Check it and rebuild the app's copy
+        run: |
+          python tools/verify_speedcam_data.py \
+            data/speedcam/nationwide.csv \
+            data/speedcam/verified.csv \
+            app/src/main/assets/speed_cameras.csv
+
+      - name: Commit only when something changed
+        run: |
+          if git diff --quiet; then
+            echo "the published data has not changed"
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/speedcam app/src/main/assets/speed_cameras.csv
+          git commit -m "data: refresh the speed camera list from the police open data"
+          git push

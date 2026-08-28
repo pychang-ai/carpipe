@@ -63,6 +63,19 @@ public final class Geo {
     }
 
     /**
+     * Tells whether a position is anywhere Taiwan's cameras could be, counting the outlying
+     * counties. A list holding anything outside this is not the list we asked for.
+     *
+     * @param latitude  the position to check
+     * @param longitude the position to check
+     * @return true when the position is within the country
+     */
+    public static boolean isInTaiwan(final double latitude, final double longitude) {
+        return latitude >= 21.7 && latitude <= 26.5
+                && longitude >= 118.0 && longitude <= 122.2;
+    }
+
+    /**
      * Brings any angle into the 0 to 360 range.
      *
      * @param degrees the angle to fold

@@ -103,6 +103,12 @@
     <string name="speedcam_distance_near">Later, closer to the camera</string>
     <string name="speedcam_distance_normal">Normal</string>
     <string name="speedcam_distance_far">Earlier, further out</string>
+    <string name="speedcam_update_data_title">Update the camera list</string>
+    <string name="speedcam_update_data_summary">Checked monthly on Wi-Fi. Last updated: %1$s</string>
+    <string name="speedcam_update_data_shipped">using the list this version was built with</string>
+    <string name="speedcam_update_working">Fetching the camera list…</string>
+    <string name="speedcam_update_done">Camera list updated: %1$d cameras</string>
+    <string name="speedcam_update_failed">Could not update the camera list: %1$s. The list already on the phone is still in use.</string>
     <string name="speedcam_test_title">Try the warning now</string>
     <string name="speedcam_test_summary">Plays one warning so the volume can be set before driving</string>
     <string name="speedcam_alert_with_limit">Speed camera in %1$d meters, limit %2$d</string>

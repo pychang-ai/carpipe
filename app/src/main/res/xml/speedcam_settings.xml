@@ -23,6 +23,12 @@
         app:useSimpleSummaryProvider="true" />
 
     <Preference
+        android:key="@string/speedcam_update_data_key"
+        android:title="@string/speedcam_update_data_title"
+        app:singleLineTitle="false"
+        app:iconSpaceReserved="false" />
+
+    <Preference
         android:key="@string/speedcam_battery_key"
         android:summary="@string/speedcam_battery_summary"
         android:title="@string/speedcam_battery_title"

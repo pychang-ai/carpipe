@@ -5,9 +5,12 @@ import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.media.AudioAttributes;
+import android.content.Context;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.provider.Settings;
 import android.speech.tts.TextToSpeech;
 import android.widget.Toast;
@@ -18,11 +21,17 @@ import androidx.core.content.ContextCompat;
 import androidx.preference.Preference;
 
 import org.schabi.newpipe.R;
+import org.schabi.newpipe.speedcam.SpeedCameraDataWorker;
 import org.schabi.newpipe.speedcam.SpeedCameraService;
+import org.schabi.newpipe.speedcam.SpeedCameraUpdater;
 
+import java.text.DateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 /**
  * Settings for the spoken speed camera warning.
@@ -35,6 +44,9 @@ public class SpeedCamSettingsFragment extends BasePreferenceFragment {
     /** The distance and limit spoken by the try-it-now button, chosen to sound typical. */
     private static final int DEMO_DISTANCE_M = 500;
     private static final int DEMO_LIMIT_KMH = 60;
+
+    private static final ExecutorService UPDATER = Executors.newSingleThreadExecutor();
+    private static final Handler MAIN = new Handler(Looper.getMainLooper());
 
     private TextToSpeech demoSpeech;
 
@@ -53,8 +65,11 @@ public class SpeedCamSettingsFragment extends BasePreferenceFragment {
                         return true;
                     }
                     SpeedCameraService.setRunning(requireContext(), wanted);
+                    SpeedCameraDataWorker.setEnabled(requireContext(), wanted);
                     return true;
                 });
+
+        showDataAge();
     }
 
     @Override
@@ -65,6 +80,10 @@ public class SpeedCamSettingsFragment extends BasePreferenceFragment {
         }
         if (getString(R.string.speedcam_battery_key).equals(preference.getKey())) {
             openBatterySettings();
+            return true;
+        }
+        if (getString(R.string.speedcam_update_data_key).equals(preference.getKey())) {
+            updateCameraList();
             return true;
         }
         return super.onPreferenceTreeClick(preference);
@@ -128,6 +147,44 @@ public class SpeedCamSettingsFragment extends BasePreferenceFragment {
                         .show();
             }
         }
+    }
+
+    /**
+     * Fetches a newer camera list now, rather than waiting for the monthly check.
+     */
+    private void updateCameraList() {
+        final Context context = requireContext().getApplicationContext();
+        Toast.makeText(context, R.string.speedcam_update_working, Toast.LENGTH_SHORT).show();
+
+        UPDATER.execute(() -> {
+            try {
+                final int count = SpeedCameraUpdater.update(context);
+                MAIN.post(() -> {
+                    Toast.makeText(context, getString(R.string.speedcam_update_done, count),
+                            Toast.LENGTH_LONG).show();
+                    showDataAge();
+                });
+            } catch (final Exception e) {
+                final String reason = e.getMessage() == null
+                        ? e.getClass().getSimpleName() : e.getMessage();
+                MAIN.post(() -> Toast.makeText(context,
+                        getString(R.string.speedcam_update_failed, reason),
+                        Toast.LENGTH_LONG).show());
+            }
+        });
+    }
+
+    /**
+     * Shows whether the list came from a download or is the one the app was built with, so a
+     * check that has quietly stopped working is visible rather than assumed to be fine.
+     */
+    private void showDataAge() {
+        final long updatedAt = SpeedCameraUpdater.updatedAt(requireContext());
+        final String when = updatedAt == 0
+                ? getString(R.string.speedcam_update_data_shipped)
+                : DateFormat.getDateInstance().format(new Date(updatedAt));
+        requirePreference(R.string.speedcam_update_data_key)
+                .setSummary(getString(R.string.speedcam_update_data_summary, when));
     }
 
     private void playDemoWarning() {
