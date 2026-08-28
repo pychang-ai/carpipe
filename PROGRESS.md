@@ -26,6 +26,7 @@
 | 日期 | 問題 | 解法 | 狀態 |
 |---|---|---|---|
 | 2026/08/27 | 首次編譯失敗：`SDK location not found` | 新 clone 的專案沒有 `local.properties`（該檔在 .gitignore 內不進版控）。手動建立並寫入 `sdk.dir` 指向本機 Android SDK 路徑，Gradle 即找得到 SDK。換機時需重建此檔 | ✅ 已解 |
+| 2026/08/28 | PI 安裝後回報「跟原版看來一樣」 | APK 內容經查無誤（`id/repeatButtonMain`、`ui_scale` 資源皆在）。根因是**只改功能沒改身分**：app 名稱圖示沿用上游，且 debug 版帶 `.debug` 套件後綴會與原版並存，PI 可能開到原版。解法：app 名稱改為 `carpipe`，並補客製設定的中文翻譯 | ✅ 已解（`ff13a76d0`） |
 | 2026/08/27 | 系統預設 java 為 Oracle JDK，非 Android 專案適用 | 編譯前設 `JAVA_HOME` 指向 Android Studio 內建的 JBR（`C:\Program Files\Android\Android Studio\jbr`，OpenJDK 21） | ✅ 已解 |
 
 ## 決策記錄
