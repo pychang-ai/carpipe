@@ -311,6 +311,21 @@ footer{ margin-top:64px; padding-top:18px; border-top:1px solid var(--rule); col
     </div>
     <p>加上這四案，測試規格從 40 案增為 <b>44 案</b>。手動項目已整理成可勾選的檢查表：<code>docs/manual-test-checklist.md</code>。</p>
 
+    <h3>裝置實測結果（2026-08-28，Pixel 8 Pro 模擬器）</h3>
+    <p>PI 回報看不到循環鍵後，在模擬器上逐案驗證。<b>先前失敗的關鍵是控制列兩秒自動隱藏，自動點擊總落在隱藏之後；改在暫停狀態下測就全部通過。</b></p>
+    <div class="tablebox">
+      <table>
+        <thead><tr><th>案例</th><th>驗了什麼</th><th>結果</th></tr></thead>
+        <tbody>
+          <tr><td class="num">A1-1</td><td>循環鍵出現在主播放器控制列</td><td><span class="pill dev">通過</span></td></tr>
+          <tr><td class="num">A1-3</td><td>關閉狀態在黑底上可辨識</td><td><span class="pill dev">修正後通過</span>（原 30% 透明度幾乎隱形，已改 63%）</td></tr>
+          <tr><td class="num">A2-1</td><td>連按三次依序寫入單曲、全部、關閉</td><td><span class="pill dev">通過</span></td></tr>
+          <tr><td class="num">A2-2</td><td>圖示隨狀態改變，單曲時顯示帶「1」的符號</td><td><span class="pill dev">通過</span></td></tr>
+          <tr><td class="num">A3-1</td><td><b>強制關閉 app 再開，循環設定仍在</b></td><td><span class="pill dev">通過</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+
     <h3>測試環境現況</h3>
     <p>已加裝 Android 模擬工具（Robolectric 4.16，僅供測試使用，不進 app），因此設定儲存與顯示換算都能在電腦上秒級驗證。整套測試跑一次約兩分鐘，每次改完程式都跑得起。</p>
     <div class="tablebox">
