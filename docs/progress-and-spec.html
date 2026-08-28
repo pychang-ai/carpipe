@@ -133,35 +133,48 @@ footer{ margin-top:64px; padding-top:18px; border-top:1px solid var(--rule); col
 
 <div class="wrap">
 
-  <p class="eyebrow">carpipe — NewPipe 公開 fork</p>
+  <p class="eyebrow">CAI PP（原 carpipe）— NewPipe 公開 fork</p>
   <h1>車上無廣告聽歌播放器：進度與功能規格</h1>
-  <p class="sub">給 PI 的兩張清單：已經做完的工作，以及這個 app 目前具備、即將具備、以及明確不做的功能。截至 2026 年 8 月 27 日。</p>
+  <p class="sub">給 PI 的兩張清單：已經做完的工作，以及這個 app 目前具備、即將具備、以及明確不做的功能。第二版，截至 2026 年 8 月 28 日。</p>
 
   <div class="hero">
-    <div class="big">6<small> / 9 項完成</small></div>
-    <p>從建 repo 到兩項客製功能全部落地，編譯與上游程式碼規範檢查皆通過。剩下三項：一項等實車驗收，兩項等你拍板方向。</p>
+    <div class="big">4<small> 項功能已完成</small></div>
+    <p>循環鍵、介面縮放、測速警示三項客製功能加上選單精簡全部落地，199 個自動測試零失敗。app 已更名為 <b>CAI PP</b>。剩下 Dropbox 備份同步一項，卡在需要你註冊 Dropbox 應用程式。</p>
+  </div>
+
+  <div class="tablebox" style="margin-bottom:32px">
+    <table>
+      <thead><tr><th>版本</th><th>日期</th><th>內容</th></tr></thead>
+      <tbody>
+        <tr><td class="num">v5</td><td>08-28</td><td>更名 CAI PP、側邊選單精簡、移除捐款項目</td></tr>
+        <tr><td class="num">v4</td><td>08-28</td><td>測速照相警示九項完成</td></tr>
+        <tr><td class="num">v3</td><td>08-28</td><td>循環鍵調亮、介面縮放中文化</td></tr>
+        <tr><td class="num">v2</td><td>08-28</td><td>更名為可辨識的名稱</td></tr>
+        <tr><td class="num">v1</td><td>08-27</td><td>循環鍵、介面縮放</td></tr>
+      </tbody>
+    </table>
   </div>
 
   <div class="cards">
     <div class="verdict ok">
-      <span class="q">開發環境</span>
-      <span class="a">完全就緒</span>
-      <span class="why">這台電腦編譯得出可安裝的 APK，兩個環境坑已記錄解法。</span>
+      <span class="q">循環鍵</span>
+      <span class="a">已驗證可用</span>
+      <span class="why">裝置實測通過，含關掉 app 重開後設定仍在。</span>
     </div>
     <div class="verdict warn">
-      <span class="q">兩項客製功能</span>
-      <span class="a">待實機驗證</span>
-      <span class="why">程式編得過不等於在手機上好用，需裝機實測。</span>
+      <span class="q">介面縮放</span>
+      <span class="a">待人眼確認</span>
+      <span class="why">換算邏輯有自動測試，但 150% 會不會破版要用看的。</span>
+    </div>
+    <div class="verdict warn">
+      <span class="q">測速警示</span>
+      <span class="a">待實車驗證</span>
+      <span class="why">九項全數實作、29 個測試守著，但真實道路上還沒跑過。</span>
     </div>
     <div class="verdict wait">
-      <span class="q">測速警示整合</span>
-      <span class="a">等你選方向</span>
-      <span class="why">四種做法已評估完，成本從半天到兩週不等。</span>
-    </div>
-    <div class="verdict wait">
-      <span class="q">備份同步</span>
-      <span class="a">方向已定未實作</span>
-      <span class="why">確定走 Dropbox，單一來源、選配不強制。</span>
+      <span class="q">Dropbox 備份</span>
+      <span class="a">卡在註冊那一步</span>
+      <span class="why">規格與八項工作已備妥，等你註冊應用程式我才動得了。</span>
     </div>
   </div>
 
@@ -225,24 +238,38 @@ footer{ margin-top:64px; padding-top:18px; border-top:1px solid var(--rule); col
             <td class="num">f4033b727</td>
           </tr>
           <tr>
-            <td class="num">6</td>
-            <td>車上驗收</td>
-            <td>有線加藍牙接車機音響實測一週，驗循環、背景播放與大字操作，問題回填進度表建新任務。</td>
-            <td><span class="pill hold">未開始</span></td>
-            <td class="num">—</td>
+            <td class="num">7</td>
+            <td>測速照相警示</td>
+            <td>PI 拍板乙案（app 內建、神盾退場），九項全數完成：資料驗證與打包 1895 點、定位服務、前方與方向判斷、語音警示與音量閃避、設定三項、通知列盲按標記、省電引導、藍牙自動啟停。</td>
+            <td><span class="pill done">完成</span></td>
+            <td class="num">585e90232</td>
           </tr>
           <tr>
-            <td class="num">7</td>
-            <td>測速警示整合</td>
-            <td>四案評估完成待拍板。查證結果：台灣沒有現成的開源測速 app，但警政署的固定式測速點是政府開放資料可自由使用。</td>
-            <td><span class="pill wait">待拍板</span></td>
+            <td class="num">9</td>
+            <td>測試規格與自動化</td>
+            <td>44 個測試案例對照表；加裝 Android 模擬測試工具後自動化 36 案，測試總數 199 零失敗。</td>
+            <td><span class="pill done">完成</span></td>
+            <td class="num">6349c058e</td>
+          </tr>
+          <tr>
+            <td class="num">10</td>
+            <td>介面精簡與更名</td>
+            <td>移除捐款項目；側邊選單第一區塊只留書籤播放清單、下載、歷史紀錄，第二區塊瀏覽頁全數移除；app 更名為 CAI PP。</td>
+            <td><span class="pill done">完成</span></td>
+            <td class="num">b3541f8bf</td>
+          </tr>
+          <tr>
+            <td class="num">6</td>
+            <td>車上驗收</td>
+            <td>依 PI 指示改排在功能完成之後。手動檢查表 28 項加實車 6 項。</td>
+            <td><span class="pill hold">待你執行</span></td>
             <td class="num">—</td>
           </tr>
           <tr>
             <td class="num">8</td>
-            <td>備份同步</td>
-            <td>盤點過 Google、Dropbox、OneDrive、GitHub、Syncthing、LINE、Discord 七種服務後拍板走 Dropbox，尚未實作。</td>
-            <td><span class="pill wait">方向已定</span></td>
+            <td>Dropbox 備份同步</td>
+            <td>規格與八項工作已備妥。第一項註冊 Dropbox 應用程式只有你能做，其餘七項我全包，約五到六天。</td>
+            <td><span class="pill wait">卡在你</span></td>
             <td class="num">—</td>
           </tr>
         </tbody>
@@ -291,7 +318,7 @@ footer{ margin-top:64px; padding-top:18px; border-top:1px solid var(--rule); col
       </table>
     </div>
 
-    <h3>B　carpipe 本次新增</h3>
+    <h3>B　CAI PP 新增的功能</h3>
     <div class="tablebox">
       <table>
         <thead><tr><th>功能</th><th>解決什麼問題</th><th>怎麼做的</th></tr></thead>
@@ -320,6 +347,26 @@ footer{ margin-top:64px; padding-top:18px; border-top:1px solid var(--rule); col
             <td>小視窗播放器維持原樣</td>
             <td>浮動小視窗畫面太小，多一顆鍵會擠。</td>
             <td>該模式下不顯示新增的循環鍵。</td>
+          </tr>
+          <tr>
+            <td><b>測速照相語音警示</b></td>
+            <td>原本要另開神盾，開兩個 app 麻煩。</td>
+            <td>內建警政署 1895 個固定測速點，接近時語音報「前方 500 公尺測速，限速 60」並自動壓低音樂；只報前方同向、同一點一趟只報一次；提前距離依速限自動調整並可在設定調早調晚。</td>
+          </tr>
+          <tr>
+            <td><b>流動測速自我標記</b></td>
+            <td>開放資料只有固定式，流動測速與臨檢不在其中。</td>
+            <td>行車通知列一顆大按鈕，鎖著螢幕也能盲按，按下記錄目前位置並語音確認，日後經過會提醒。</td>
+          </tr>
+          <tr>
+            <td><b>上車自動開、下車自動關</b></td>
+            <td>要記得按開關，且平時不該一直吃 GPS。</td>
+            <td>手機連上車機藍牙即啟動警示，斷線即停止。</td>
+          </tr>
+          <tr>
+            <td><b>選單精簡</b></td>
+            <td>車上操作要少、要大、要好按。</td>
+            <td>側邊選單只留書籤播放清單、下載、歷史紀錄；移除訂閱、新影片、熱門、遊戲熱門、直播等瀏覽頁與捐款項目。這些頁面本身沒有被刪除，仍可從主畫面分頁進入。</td>
           </tr>
         </tbody>
       </table>
@@ -380,14 +427,14 @@ footer{ margin-top:64px; padding-top:18px; border-top:1px solid var(--rule); col
   <section class="stack honest">
     <h2>三、必須說清楚的三件事</h2>
     <ul>
-      <li><b>任務 4 與 5 只通過編譯，還沒在手機上跑過。</b>編譯成功與程式碼規範檢查通過，都只證明程式寫得合法，不證明在車上好用。尤其 150% 縮放可能讓部分畫面變得擁擠，這要實機才看得出來。</li>
-      <li><b>測試版 APK 無法直接傳給你。</b>檔案 38.5 MB，超過對話 30 MB 的傳輸上限。檔案在本機 <code>carpipe\app\build\outputs\apk\debug\app-debug.apk</code>，用 USB 或 Dropbox 傳到手機安裝；或把手機接上電腦，我用指令直接裝。</li>
-      <li><b>測速的政府開放資料還沒實際下載驗證。</b>三項確認目前是：公開 ✅ 政府開放授權、可下載 ✅ 有官方管道、已測試可執行 ❌ 尚未實跑。在真正動工任務 7 之前，第三項不得標成通過。</li>
+      <li><b>測速警示還沒在真實道路上跑過。</b>邏輯有 29 個自動測試守著，但「經過真的測速桿時會不會準時報、音樂有沒有壓低又恢復、關螢幕會不會被系統殺掉」，這三件只能實車驗。第一趟請特別留意報得太早或太晚，回報我調整。</li>
+      <li><b>介面縮放的破版風險用自動測試看不到。</b>密度換算有測試，但 150% 時文字會不會被截斷、按鈕會不會重疊，得靠眼睛。手動檢查表裡列了五個畫面要逐一確認。</li>
+      <li><b>APK 仍無法直接傳給你。</b>38.4 MB 超過對話 30 MB 上限，改放你的 Dropbox：<code>Android APK\CAI-PP-debug-2026-08-28-v5.apk</code>，舊版已刪。</li>
     </ul>
   </section>
 
   <footer>
-    carpipe — NewPipe 公開 fork，GPLv3。進度單一事實來源為 repo 根目錄的 <code>PROGRESS.md</code>；本報告為 2026-08-27 的整理，後續工作會推翻其中的數字。
+    CAI PP（Car AI Pipe）— NewPipe 公開 fork，GPLv3，程式碼倉庫仍名為 carpipe。進度單一事實來源為 repo 根目錄的 <code>PROGRESS.md</code>；本報告為 2026-08-28 第二版，後續工作會推翻其中的數字。
   </footer>
 
 </div>
