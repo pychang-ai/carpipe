@@ -1459,6 +1459,11 @@
         <item>@string/off</item>
     </string-array>
 
+    <string name="dropbox_link_key">dropbox_link</string>
+    <string name="dropbox_backup_now_key">dropbox_backup_now</string>
+    <string name="dropbox_restore_key">dropbox_restore</string>
+    <string name="dropbox_auto_key">dropbox_auto</string>
+
     <string name="speedcam_enabled_key">speedcam_enabled</string>
     <string name="speedcam_distance_key">speedcam_distance</string>
     <string name="speedcam_test_key">speedcam_test</string>

@@ -4,6 +4,7 @@
  */
 
 import com.android.build.api.dsl.ApplicationExtension
+import java.util.Properties
 import java.util.regex.Pattern
 
 plugins {
@@ -25,6 +26,16 @@ val workingBranch = gitWorkingBranch.getOrElse("")
 val normalizedWorkingBranch = workingBranch
     .replaceFirst("^[^A-Za-z]+".toRegex(), "")
     .replace("[^0-9A-Za-z]+".toRegex(), "")
+
+// The Dropbox application key identifies this app to Dropbox. It is not a secret in the
+// cryptographic sense, but it belongs to one person's Dropbox account, so it is read from
+// local.properties, which is never committed. An empty key simply leaves backup unavailable.
+val dropboxAppKey: String = Properties().apply {
+    val file = rootProject.file("local.properties")
+    if (file.exists()) {
+        file.inputStream().use { load(it) }
+    }
+}.getProperty("dropbox.appKey", "")
 
 kotlin {
     jvmToolchain(21)
@@ -54,6 +65,8 @@ configure<ApplicationExtension> {
         System.getProperty("versionNameSuffix")?.let { versionNameSuffix = it }
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+
+        buildConfigField("String", "DROPBOX_APP_KEY", "\"$dropboxAppKey\"")
     }
 
     buildTypes {

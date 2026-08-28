@@ -73,6 +73,8 @@ public class BackupRestoreSettingsFragment extends BasePreferenceFragment {
 
         addPreferencesFromResourceRegistry();
 
+        DropboxPreferences.attach(this);
+
         final Preference importDataPreference = requirePreference(R.string.import_data);
         importDataPreference.setOnPreferenceClickListener((Preference p) -> {
             NoFileManagerSafeGuard.launchSafe(
