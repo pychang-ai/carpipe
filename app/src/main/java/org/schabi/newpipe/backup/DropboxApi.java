@@ -83,6 +83,18 @@ public final class DropboxApi {
         DropboxAccount.completeSignIn(context, refresh, readAccountName());
     }
 
+    /**
+     * Reads the account name from Dropbox and stores it for the settings screen.
+     *
+     * @return the name, or null when it could not be read
+     */
+    @Nullable
+    public String fetchAccountName() {
+        final String name = readAccountName();
+        DropboxAccount.setAccountName(context, name);
+        return name;
+    }
+
     @Nullable
     private String readAccountName() {
         try {

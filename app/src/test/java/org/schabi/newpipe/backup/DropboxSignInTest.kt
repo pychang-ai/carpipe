@@ -23,7 +23,7 @@ class DropboxSignInTest {
     private val context get() = RuntimeEnvironment.getApplication()
 
     @Test fun `the sign-in address carries the app, the proof and the lasting token request`() {
-        val url = Uri.parse(DropboxAccount.startSignIn(context))
+        val url = Uri.parse(DropboxAccount.browserSignInUrl(context))
 
         assertEquals("www.dropbox.com", url.host)
         assertEquals("code", url.getQueryParameter("response_type"))
@@ -37,16 +37,16 @@ class DropboxSignInTest {
     }
 
     @Test fun `each attempt uses a fresh proof`() {
-        val first = Uri.parse(DropboxAccount.startSignIn(context))
+        val first = Uri.parse(DropboxAccount.browserSignInUrl(context))
             .getQueryParameter("code_challenge")
-        val second = Uri.parse(DropboxAccount.startSignIn(context))
+        val second = Uri.parse(DropboxAccount.browserSignInUrl(context))
             .getQueryParameter("code_challenge")
 
         assertNotEquals("the same proof was reused", first, second)
     }
 
     @Test fun `the proof in the address matches the secret kept to redeem the code`() {
-        val url = Uri.parse(DropboxAccount.startSignIn(context))
+        val url = Uri.parse(DropboxAccount.browserSignInUrl(context))
 
         val verifier = DropboxAccount.pendingVerifier(context)
 

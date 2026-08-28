@@ -20,6 +20,16 @@
     <!-- connecting to the car stereo is what starts and ends driving mode -->
     <uses-permission android:name="android.permission.BLUETOOTH_CONNECT" />
 
+    <!-- so signing in can hand over to the Dropbox app instead of asking for a password -->
+    <queries>
+        <package android:name="com.dropbox.android" />
+    </queries>
+
+    <!-- Dropbox's sign-in library asks for Android 8 while the app still runs on 6. The app
+         stays installable on the older ones and simply does not offer Dropbox backup there,
+         which DropboxAccount.isUsable() enforces. -->
+    <uses-sdk tools:overrideLibrary="com.dropbox.core.sdk.android" />
+
     <!-- We need to be able to open links in the browser on API 30+ -->
     <queries>
         <intent>
@@ -106,6 +116,22 @@
         <service
             android:name=".local.feed.service.FeedLoadService"
             android:foregroundServiceType="dataSync" />
+
+        <!-- receives the approval back from the installed Dropbox app -->
+        <activity
+            android:name="com.dropbox.core.android.AuthActivity"
+            android:configChanges="orientation|keyboard"
+            android:exported="true"
+            android:launchMode="singleTask">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.BROWSABLE" />
+                <category android:name="android.intent.category.DEFAULT" />
+
+                <data android:scheme="${dropboxScheme}" />
+            </intent-filter>
+        </activity>
 
         <service
             android:name=".speedcam.SpeedCameraService"

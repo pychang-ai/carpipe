@@ -67,6 +67,8 @@ configure<ApplicationExtension> {
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
         buildConfigField("String", "DROPBOX_APP_KEY", "\"$dropboxAppKey\"")
+        // the Dropbox app returns to us through this scheme, which it derives from the key
+        manifestPlaceholders["dropboxScheme"] = "db-$dropboxAppKey"
     }
 
     buildTypes {
@@ -286,6 +288,11 @@ dependencies {
     implementation(libs.jsoup)
 
     // HTTP client
+    // only for signing in: it hands the approval to the installed Dropbox app, so no
+    // password has to be typed. The backup itself still goes over plain HTTP.
+    implementation(libs.dropbox.android.sdk)
+    implementation(libs.dropbox.core.sdk)
+
     implementation(libs.squareup.okhttp)
     implementation(libs.squareup.okhttp.brotli)
 

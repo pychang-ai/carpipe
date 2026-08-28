@@ -3,12 +3,19 @@ package org.schabi.newpipe.backup;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.net.Uri;
+import android.os.Build;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.preference.PreferenceManager;
 
+import com.dropbox.core.DbxRequestConfig;
+import com.dropbox.core.android.Auth;
+import com.dropbox.core.oauth.DbxCredential;
+
 import org.schabi.newpipe.BuildConfig;
+
+import java.util.List;
 
 /**
  * Remembers whether Dropbox has been linked, and holds the tokens it gave us.
@@ -42,6 +49,16 @@ public final class DropboxAccount {
     }
 
     /**
+     * Tells whether this phone can use Dropbox backup at all. The sign-in library needs
+     * Android 8, while the app itself still runs on older phones.
+     *
+     * @return false on a phone too old for the sign-in library
+     */
+    public static boolean isUsable() {
+        return isConfigured() && Build.VERSION.SDK_INT >= Build.VERSION_CODES.O;
+    }
+
+    /**
      * Tells whether the driver has signed in.
      *
      * @param context used to read the stored tokens
@@ -63,13 +80,53 @@ public final class DropboxAccount {
     }
 
     /**
-     * Builds the address the browser is sent to, and remembers the matching secret.
+     * Hands the approval to the Dropbox app on the phone, falling back to the browser when it
+     * is not installed. Using the installed app means no password has to be typed and the
+     * approval comes straight back, which is the flow people know from other apps.
+     *
+     * @param context the screen the sign-in is started from
+     */
+    public static void startSignIn(@NonNull final Context context) {
+        Auth.startOAuth2PKCE(context, BuildConfig.DROPBOX_APP_KEY,
+                DbxRequestConfig.newBuilder("CAI-PP").build(),
+                List.of("account_info.read", "files.metadata.read",
+                        "files.content.write", "files.content.read"));
+    }
+
+    /**
+     * Picks up the approval after the Dropbox app or the browser has returned.
+     *
+     * @param context used to store what came back
+     * @return true when a sign-in has just completed
+     */
+    public static boolean collectSignIn(@NonNull final Context context) {
+        final DbxCredential credential = Auth.getDbxCredential();
+        if (credential == null || credential.getRefreshToken() == null) {
+            return false;
+        }
+        completeSignIn(context, credential.getRefreshToken(), null);
+        return true;
+    }
+
+    /**
+     * Stores the account name once it has been read back from Dropbox.
+     *
+     * @param context used to store it
+     * @param name    the name to show in the settings
+     */
+    static void setAccountName(@NonNull final Context context, @Nullable final String name) {
+        prefs(context).edit().putString(KEY_ACCOUNT, name).apply();
+    }
+
+    /**
+     * Builds the address for signing in through a browser, and remembers the matching secret.
+     * Kept for the case where the sign-in has to be done by hand.
      *
      * @param context used to store the secret until the code comes back
      * @return the sign-in address
      */
     @NonNull
-    public static String startSignIn(@NonNull final Context context) {
+    public static String browserSignInUrl(@NonNull final Context context) {
         final String verifier = Pkce.newVerifier();
         prefs(context).edit().putString(KEY_VERIFIER, verifier).apply();
 

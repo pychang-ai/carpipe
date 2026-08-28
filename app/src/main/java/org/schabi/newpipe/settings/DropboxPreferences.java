@@ -3,13 +3,13 @@ package org.schabi.newpipe.settings;
 import android.content.Context;
 import android.os.Handler;
 import android.os.Looper;
-import android.text.InputType;
-import android.widget.EditText;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
+import androidx.lifecycle.Lifecycle;
+import androidx.lifecycle.LifecycleEventObserver;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
 import androidx.preference.SwitchPreferenceCompat;
@@ -20,7 +20,6 @@ import org.schabi.newpipe.backup.BackupNames;
 import org.schabi.newpipe.backup.DailyBackupWorker;
 import org.schabi.newpipe.backup.DropboxAccount;
 import org.schabi.newpipe.backup.DropboxApi;
-import org.schabi.newpipe.util.external_communication.ShareUtils;
 
 import java.text.DateFormat;
 import java.time.LocalDateTime;
@@ -65,15 +64,30 @@ final class DropboxPreferences {
 
         refresh(fragment, link, backupNow, auto, restore);
 
+        // the approval comes back through the Dropbox app, which brings this screen forward
+        // again rather than calling us, so the result is picked up on the way back in
+        fragment.getLifecycle().addObserver((LifecycleEventObserver) (source, event) -> {
+            if (event == Lifecycle.Event.ON_RESUME
+                    && !DropboxAccount.isLinked(context)
+                    && DropboxAccount.collectSignIn(context)) {
+                DailyBackupWorker.setEnabled(context, auto.isChecked());
+                WORKER.execute(() -> {
+                    new DropboxApi(context).fetchAccountName();
+                    MAIN.post(() -> refresh(fragment, link, backupNow, auto, restore));
+                });
+                refresh(fragment, link, backupNow, auto, restore);
+            }
+        });
+
         link.setOnPreferenceClickListener(p -> {
-            if (!DropboxAccount.isConfigured()) {
+            if (!DropboxAccount.isUsable()) {
                 toast(fragment, context.getString(R.string.dropbox_not_configured));
             } else if (DropboxAccount.isLinked(context)) {
                 DropboxAccount.unlink(context);
                 DailyBackupWorker.setEnabled(context, false);
                 refresh(fragment, link, backupNow, auto, restore);
             } else {
-                startSignIn(fragment, link, backupNow, auto, restore);
+                DropboxAccount.startSignIn(context);
             }
             return true;
         });
@@ -111,36 +125,6 @@ final class DropboxPreferences {
             });
             return true;
         });
-    }
-
-    private static void startSignIn(@NonNull final PreferenceFragmentCompat fragment,
-                                    final Preference link, final Preference backupNow,
-                                    final SwitchPreferenceCompat auto, final Preference restore) {
-        final Context context = fragment.requireContext();
-        ShareUtils.openUrlInBrowser(context, DropboxAccount.startSignIn(context));
-
-        final EditText input = new EditText(context);
-        input.setInputType(InputType.TYPE_CLASS_TEXT);
-
-        new AlertDialog.Builder(context)
-                .setTitle(R.string.dropbox_paste_code_title)
-                .setMessage(R.string.dropbox_paste_code_message)
-                .setView(input)
-                .setNegativeButton(R.string.cancel, (d, w) -> d.dismiss())
-                .setPositiveButton(R.string.ok, (d, w) -> {
-                    final String code = input.getText().toString();
-                    WORKER.execute(() -> {
-                        try {
-                            new DropboxApi(context).signIn(code);
-                            DailyBackupWorker.setEnabled(context, auto.isChecked());
-                            MAIN.post(() ->
-                                    refresh(fragment, link, backupNow, auto, restore));
-                        } catch (final Exception e) {
-                            reportFailure(fragment, e);
-                        }
-                    });
-                })
-                .show();
     }
 
     private static void offerRestore(@NonNull final PreferenceFragmentCompat fragment,
