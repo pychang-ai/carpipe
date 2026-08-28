@@ -6,7 +6,7 @@
     <string name="license">由 %1$s 以 %2$s 授權</string>
     <string name="tab_about">關於 &amp; 常見問題</string>
     <string name="tab_licenses">授權條款</string>
-    <string name="app_description">在 Android 上自由且輕量的串流。</string>
+    <string name="app_description">Car AI Pipe。以 NewPipe 為基礎的車用無廣告播放器，加上明顯的循環鍵、可放大的介面、測速照相語音警示，以及備份到自己的 Dropbox。</string>
     <string name="contribution_title">貢獻</string>
     <string name="contribution_encouragement">不管您有什麼點子 ── 翻譯、設計、清理或撰寫大量程式碼 ── 我們永遠歡迎您來幫忙。做得越多，NewPipe 就會更好！</string>
     <string name="view_on_github">在 GitHub 上檢視</string>

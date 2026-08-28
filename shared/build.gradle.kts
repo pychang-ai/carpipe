@@ -21,8 +21,8 @@ val buildConfigGenerator by tasks.registering(Sync::class) {
         package $buildConfigPackage
 
         object BuildConfig {
-            const val VERSION_NAME = "$NEWPIPE_VERSION_NAME"
-            const val APP_NAME = "NewPipe"
+            const val VERSION_NAME = "$CAI_PP_VERSION_NAME  (NewPipe $NEWPIPE_VERSION_NAME)"
+            const val APP_NAME = "CAI PP"
         }
     """.trimIndent()
     from(resources.text.fromString(rawClass)) {
