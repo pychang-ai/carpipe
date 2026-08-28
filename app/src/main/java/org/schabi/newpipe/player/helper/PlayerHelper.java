@@ -412,6 +412,40 @@ public final class PlayerHelper {
     }
 
     /**
+     * Reads back the repeat mode chosen in an earlier session.
+     *
+     * @param context used to look up the preference key
+     * @param prefs   where the mode was stored
+     * @return the stored mode, or repeating off when nothing usable was stored
+     */
+    @RepeatMode
+    public static int retrieveRepeatModeFromPrefs(@NonNull final Context context,
+                                                  @NonNull final SharedPreferences prefs) {
+        final int repeatMode = prefs.getInt(context.getString(R.string.last_repeat_mode),
+                com.google.android.exoplayer2.Player.REPEAT_MODE_OFF);
+        return switch (repeatMode) {
+            case com.google.android.exoplayer2.Player.REPEAT_MODE_ONE,
+                 com.google.android.exoplayer2.Player.REPEAT_MODE_ALL -> repeatMode;
+            // never hand the player a mode the user could not have chosen
+            default -> com.google.android.exoplayer2.Player.REPEAT_MODE_OFF;
+        };
+    }
+
+    /**
+     * Stores the repeat mode so it survives closing the app, which matters while driving:
+     * the mode chosen once should still be in effect on the next trip.
+     *
+     * @param context    used to look up the preference key
+     * @param prefs      where to store the mode
+     * @param repeatMode the mode the user just chose
+     */
+    public static void saveRepeatModeToPrefs(@NonNull final Context context,
+                                             @NonNull final SharedPreferences prefs,
+                                             @RepeatMode final int repeatMode) {
+        prefs.edit().putInt(context.getString(R.string.last_repeat_mode), repeatMode).apply();
+    }
+
+    /**
      * Gives the repeat mode that follows the current one, cycling off, one and all.
      * Kept free of Android dependencies so the cycle order can be unit tested.
      *

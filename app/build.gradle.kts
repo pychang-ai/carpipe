@@ -127,6 +127,13 @@ configure<ApplicationExtension> {
         resValues = true
     }
 
+    testOptions {
+        unitTests {
+            // Robolectric needs the merged resources to run tests against the real app resources
+            isIncludeAndroidResources = true
+        }
+    }
+
     packaging {
         resources {
             // remove two files which belong to jsoup
@@ -319,6 +326,7 @@ dependencies {
     // Testing
     testImplementation(libs.junit)
     testImplementation(libs.mockito.core)
+    testImplementation(libs.robolectric)
 
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.runner)
