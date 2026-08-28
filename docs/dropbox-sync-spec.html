@@ -1,0 +1,213 @@
+<!-- artifact: https://claude.ai/code/artifact/eb8cecf1-2c92-43a8-a870-73582000fab3 -->
+<title>Dropbox 備份同步規格</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@500;700&family=Noto+Sans+TC:wght@400;500;700&display=swap">
+
+<style>
+:root{
+  --ground:#F5F4F1; --surface:#FFFFFF; --sunk:#EDECE7;
+  --ink:#1B1A17; --ink-2:#403E37; --muted:#6E6C62; --rule:#DEDCD4; --rule-2:#CBC8BE;
+  --dab:#8A4B25; --hem:#3F4C7C; --hem-soft:#E5E7F1;
+  --ok:#3D6650; --ok-soft:#E3EDE6; --warn:#8F6416; --warn-soft:#F6EDDA;
+  --bad:#963428; --bad-soft:#F6E4E1;
+  --display:"Noto Serif TC","Iowan Old Style","Palatino Linotype",Palatino,Georgia,serif;
+  --body:"Noto Sans TC","Segoe UI Variable Text","Microsoft JhengHei UI",system-ui,sans-serif;
+  --mono:"Cascadia Mono",Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --ground:#141519; --surface:#1D1E23; --sunk:#232429;
+    --ink:#E9E8E2; --ink-2:#C6C4BC; --muted:#95948B; --rule:#2E3037; --rule-2:#3C3F47;
+    --dab:#D08A5A; --hem:#93A0DA; --hem-soft:#1E2233;
+    --ok:#7FB394; --ok-soft:#1A2620; --warn:#CFA85A; --warn-soft:#2C2416;
+    --bad:#D9796E; --bad-soft:#2E1C1A;
+  }
+}
+:root[data-theme="dark"]{
+  --ground:#141519; --surface:#1D1E23; --sunk:#232429;
+  --ink:#E9E8E2; --ink-2:#C6C4BC; --muted:#95948B; --rule:#2E3037; --rule-2:#3C3F47;
+  --dab:#D08A5A; --hem:#93A0DA; --hem-soft:#1E2233;
+  --ok:#7FB394; --ok-soft:#1A2620; --warn:#CFA85A; --warn-soft:#2C2416;
+  --bad:#D9796E; --bad-soft:#2E1C1A;
+}
+body{ background:var(--ground); color:var(--ink); font-family:var(--body); font-size:16px; line-height:1.75; margin:0; }
+.wrap{ max-width:980px; margin:0 auto; padding:48px 24px 96px; }
+.eyebrow{ font-size:12px; letter-spacing:.16em; text-transform:uppercase; color:var(--muted); font-weight:700; margin:0 0 10px; }
+h1{ font-family:var(--display); font-weight:700; font-size:40px; line-height:1.25; margin:0 0 8px; text-wrap:balance; }
+.sub{ color:var(--ink-2); margin:0 0 32px; max-width:64ch; }
+h2{ font-family:var(--display); font-size:26px; font-weight:700; line-height:1.3; margin:0 0 4px; text-wrap:balance; padding-bottom:10px; border-bottom:2px solid var(--dab); }
+h3{ font-family:var(--display); font-size:19px; font-weight:700; margin:16px 0 2px; }
+section{ margin-top:56px; }
+.stack{ display:flex; flex-direction:column; gap:18px; }
+p{ margin:0; max-width:70ch; }
+.hero{ background:var(--surface); border:1px solid var(--rule); border-top:4px solid var(--dab); padding:28px; margin-bottom:32px; display:flex; flex-wrap:wrap; gap:28px; align-items:baseline; }
+.hero .big{ font-family:var(--display); font-size:52px; font-weight:700; line-height:1; color:var(--dab); font-variant-numeric:tabular-nums; }
+.hero .big small{ font-size:20px; color:var(--muted); font-weight:500; }
+.hero p{ flex:1 1 320px; color:var(--ink-2); }
+.tablebox{ overflow-x:auto; border:1px solid var(--rule); background:var(--surface); }
+table{ border-collapse:collapse; width:100%; min-width:700px; font-size:15px; }
+th,td{ text-align:left; padding:11px 14px; border-bottom:1px solid var(--rule); vertical-align:top; }
+th{ background:var(--sunk); font-size:12px; letter-spacing:.08em; text-transform:uppercase; color:var(--muted); font-weight:700; white-space:nowrap; }
+tbody tr:last-child td{ border-bottom:none; }
+td.num{ font-variant-numeric:tabular-nums; white-space:nowrap; color:var(--muted); font-family:var(--mono); font-size:13px; }
+code{ font-family:var(--mono); font-size:13px; background:var(--sunk); padding:1px 5px; border:1px solid var(--rule); }
+.pill{ display:inline-block; font-size:12px; font-weight:700; padding:2px 9px; white-space:nowrap; border:1px solid transparent; }
+.pill.you{ background:var(--warn-soft); color:var(--warn); border-color:var(--warn); }
+.pill.me{ background:var(--ok-soft); color:var(--ok); border-color:var(--ok); }
+.pill.no{ background:var(--bad-soft); color:var(--bad); border-color:var(--bad); }
+.daily{ background:var(--hem-soft); border-left:4px solid var(--hem); padding:16px 20px; display:flex; flex-direction:column; gap:6px; }
+.daily .tag{ font-size:12px; letter-spacing:.1em; color:var(--hem); font-weight:700; }
+.daily p{ color:var(--ink-2); }
+.honest{ background:var(--bad-soft); border:1px solid var(--bad); padding:20px 24px; display:flex; flex-direction:column; gap:12px; }
+.honest h2{ border-bottom-color:var(--bad); color:var(--bad); margin-bottom:2px; }
+.honest ul{ margin:0; padding-left:20px; display:flex; flex-direction:column; gap:8px; }
+.honest li{ color:var(--ink-2); }
+ul.plain{ margin:0; padding-left:20px; display:flex; flex-direction:column; gap:6px; }
+ul.plain li{ color:var(--ink-2); }
+footer{ margin-top:64px; padding-top:18px; border-top:1px solid var(--rule); color:var(--muted); font-size:13px; }
+</style>
+
+<div class="wrap">
+
+  <p class="eyebrow">carpipe 任務 8</p>
+  <h1>Dropbox 備份同步：規格與工作清單</h1>
+  <p class="sub">換手機時訂閱、播放清單與測速標記要能原封不動回來。這份寫清楚備份什麼、什麼時候備、怎麼還原、失敗怎麼辦，以及八項工作的順序。2026 年 8 月 28 日。</p>
+
+  <div class="hero">
+    <div class="big">7<small> 份備份，保留一週</small></div>
+    <p>每天自動備份一次，保留最近七份。只留一份的風險是資料已經壞了才備份，好的那份就被蓋掉了；留七份等於有一週的後悔空間。</p>
+  </div>
+
+  <section class="stack">
+    <h2>一、功能規格</h2>
+
+    <h3>要解決的問題</h3>
+    <p>app 的資料目前只存在手機裡。手機掉了、壞了、或換新機，訂閱的頻道、自建的播放清單、以及你在路上標記的流動測速點就全部消失。這個功能把這些資料定期送進你自己的 Dropbox，換機時完整拿回來。</p>
+
+    <h3>備份什麼</h3>
+    <div class="tablebox">
+      <table>
+        <thead><tr><th>內容</th><th>包含</th><th>說明</th></tr></thead>
+        <tbody>
+          <tr><td>訂閱頻道</td><td>✅</td><td>沿用 app 既有的匯出格式</td></tr>
+          <tr><td>本機播放清單</td><td>✅</td><td>車用歌單就在這裡</td></tr>
+          <tr><td>觀看紀錄</td><td>✅</td><td>同一個資料庫檔</td></tr>
+          <tr><td>所有設定</td><td>✅</td><td>包含循環模式、介面縮放、測速警示的設定</td></tr>
+          <tr><td><b>測速自我標記</b></td><td>✅</td><td>carpipe 新增的部分，不納入的話換機就得重標</td></tr>
+          <tr><td>下載的影片與音訊檔</td><td><span class="pill no">不含</span></td><td>檔案太大，且原本就能重新下載</td></tr>
+          <tr><td>縮圖快取</td><td><span class="pill no">不含</span></td><td>用完即棄的暫存，備份沒有意義</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3>存在哪裡、叫什麼名字</h3>
+    <ul class="plain">
+      <li>位置：你的 Dropbox 的 <code>Apps/carpipe/</code> 資料夾，<b>看得到也抓得到</b>，這是先前選 Dropbox 而不是 Google Drive 的主要理由。</li>
+      <li>檔名：<code>carpipe-backup-20260828-2130.zip</code>，帶日期與時間，一眼看得出新舊。</li>
+      <li>保留：最近七份，超過自動刪最舊的，<b>但永遠不刪最新那一份</b>。</li>
+      <li>權限：app 只拿得到自己那個資料夾的鑰匙，你 Dropbox 裡其他檔案它讀不到。</li>
+    </ul>
+
+    <div class="daily">
+      <b class="tag">日常例子</b>
+      <p>這個權限就像把備份鑰匙交給大樓管理員，但那把鑰匙只開你家門口那個信箱，開不了大門也開不了別戶。</p>
+    </div>
+
+    <h3>什麼時候備份</h3>
+    <ul class="plain">
+      <li><b>每天自動一次</b>，挑手機在充電且有 Wi-Fi 的時候做，不吃行動網路也不掉電。</li>
+      <li><b>設定頁一顆「立即備份」</b>，換手機前想立刻備一份時用。</li>
+      <li>資料沒有變動時跳過，不會每天上傳一份一模一樣的檔案。</li>
+    </ul>
+
+    <h3>怎麼還原</h3>
+    <p>設定頁列出雲端上的備份，顯示日期與大小，選一份就下載並匯入。<b>匯入會覆蓋現有資料，所以會先問一次確認</b>，因為在錯的時機還原等於把新資料換成舊的。</p>
+
+    <h3>失敗了怎麼辦</h3>
+    <ul class="plain">
+      <li>沒網路、授權過期、Dropbox 空間滿——各給看得懂的訊息並可重試。</li>
+      <li>設定頁固定顯示<b>上次成功備份的時間</b>；超過七天沒有成功就標紅提醒。</li>
+      <li><b>絕不靜默失敗。</b>備份最糟的情況不是失敗，是你以為有備份，其實三個月前就斷了。</li>
+    </ul>
+
+    <h3>明確不做</h3>
+    <ul class="plain">
+      <li><b>多裝置即時同步</b>——這是備份不是同步，兩台手機同時改資料的合併問題不在範圍內。</li>
+      <li><b>衝突合併</b>——還原就是整份覆蓋，以你選的那份為準。</li>
+      <li><b>額外加密</b>——資料放在你自己的 Dropbox 帳號底下，已受該帳號保護。若你要再上一層密碼，另案討論。</li>
+    </ul>
+  </section>
+
+  <section class="stack">
+    <h2>二、工作清單</h2>
+    <div class="tablebox">
+      <table>
+        <thead><tr><th>#</th><th>工作</th><th>內容</th><th>誰做</th><th>估時</th></tr></thead>
+        <tbody>
+          <tr>
+            <td class="num">8.1</td><td>註冊 Dropbox 應用程式</td>
+            <td>到 Dropbox 開發者後台建立一個應用程式，權限選「只能存取自己的專屬資料夾」，取得一組識別碼。<b>要用你的帳號登入，我無法代勞</b>，我會寫成一頁截圖說明讓你照著點</td>
+            <td><span class="pill you">你</span></td><td>10 分鐘</td>
+          </tr>
+          <tr>
+            <td class="num">8.2</td><td>識別碼設定</td>
+            <td>把識別碼放進本機設定檔，不進版控，避免公開 repo 外洩</td>
+            <td><span class="pill me">我</span></td><td>0.5 天</td>
+          </tr>
+          <tr>
+            <td class="num">8.3</td><td>授權流程</td>
+            <td>用系統瀏覽器完成一次授權，之後憑證加密存在手機本機並自動續期，你不會再被要求登入</td>
+            <td><span class="pill me">我</span></td><td>1 天</td>
+          </tr>
+          <tr>
+            <td class="num">8.4</td><td>上傳備份</td>
+            <td>沿用既有匯出功能產生備份檔，加入測速標記，上傳到專屬資料夾</td>
+            <td><span class="pill me">我</span></td><td>1 天</td>
+          </tr>
+          <tr>
+            <td class="num">8.5</td><td>自動排程與份數管理</td>
+            <td>每天在充電且有 Wi-Fi 時備份一次，保留七份自動清理</td>
+            <td><span class="pill me">我</span></td><td>0.5 天</td>
+          </tr>
+          <tr>
+            <td class="num">8.6</td><td>還原流程</td>
+            <td>列出雲端備份、下載、二次確認後匯入</td>
+            <td><span class="pill me">我</span></td><td>1 天</td>
+          </tr>
+          <tr>
+            <td class="num">8.7</td><td>設定介面與狀態</td>
+            <td>開關、立即備份、上次備份時間、目前帳號、解除連結</td>
+            <td><span class="pill me">我</span></td><td>0.5 天</td>
+          </tr>
+          <tr>
+            <td class="num">8.8</td><td>錯誤處理與換機驗證</td>
+            <td>各種失敗的訊息與重試；實跑一次備份、清資料、還原，確認數量一致</td>
+            <td><span class="pill me">我</span></td><td>1 天</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <p>合計約 <b>五到六個工作天</b>。8.2 之後的每一項都依賴 8.1 的識別碼才能實際跑起來，但程式可以先寫好、把識別碼留空，等你註冊完填進去就能測。</p>
+
+    <h3>一個技術選擇</h3>
+    <p>不引入 Dropbox 官方的程式庫，改用它的網路介面直接呼叫。我們只需要四件事：上傳、列出、下載、刪除；為此背一整套程式庫會讓 app 變大、相依變多，也和這個專案一路維持精簡、不依賴大廠元件的作法不一致。專案本來就有現成的網路元件可以用。</p>
+
+    <h3>已寫好的測試案例</h3>
+    <p>測試規格裡的 C2-1 到 C2-6 就是這一項的驗收標準：授權後顯示帳號、備份檔下載回來解得開、超過七份刪最舊且不刪最新、還原後訂閱數與清單數一致、沒網路時給明確訊息、憑證不出現在版控與錯誤日誌。其中刪除規則與憑證檢查可以自動驗，其餘要人工。</p>
+  </section>
+
+  <section class="stack honest">
+    <h2>三、必須先說清楚的</h2>
+    <ul>
+      <li><b>8.1 卡在你身上。</b>這是唯一我無法代勞的環節。程式我可以先寫到完整，但沒有識別碼就無法連上 Dropbox 實測，等於整條路只能停在「應該會動」而不是「驗過會動」。</li>
+      <li><b>Dropbox 免費帳號只有 2 GB。</b>備份檔本身很小，大概幾百 KB 到幾 MB，七份也不會有壓力；但如果你的 Dropbox 已經接近滿了，備份會失敗，屆時訊息會告訴你。</li>
+      <li><b>這是備份，不是同步。</b>兩台手機同時用同一個帳號，後備份的會蓋過先備份的。你目前是單機使用，這不成問題，但值得先知道。</li>
+    </ul>
+  </section>
+
+  <footer>
+    carpipe 任務 8 規格與工作清單，2026-08-28。進度單一事實來源為 repo 根目錄的 <code>PROGRESS.md</code>。
+  </footer>
+
+</div>
