@@ -1462,6 +1462,7 @@
     <string name="speedcam_enabled_key">speedcam_enabled</string>
     <string name="speedcam_distance_key">speedcam_distance</string>
     <string name="speedcam_test_key">speedcam_test</string>
+    <string name="speedcam_battery_key">speedcam_battery</string>
 
     <string name="speedcam_distance_default_value">1.0</string>
     <string-array name="speedcam_distance_values">

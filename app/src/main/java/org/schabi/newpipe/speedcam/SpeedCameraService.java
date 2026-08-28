@@ -28,6 +28,7 @@ import androidx.core.app.NotificationCompat;
 import org.schabi.newpipe.MainActivity;
 import org.schabi.newpipe.R;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
@@ -49,8 +50,12 @@ public final class SpeedCameraService extends Service implements LocationListene
     private static final long UPDATE_INTERVAL_MS = 1000;
     private static final float UPDATE_DISTANCE_M = 10;
 
+    /** Marks a speed trap at the current position, sent from the notification button. */
+    public static final String ACTION_MARK = "org.schabi.newpipe.speedcam.MARK";
+
     private final SpeedCameraAlerts alerts = new SpeedCameraAlerts();
     private List<SpeedCamera> cameras;
+    private Location lastLocation;
     private LocationManager locationManager;
     private TextToSpeech speech;
     private boolean speechReady;
@@ -65,7 +70,8 @@ public final class SpeedCameraService extends Service implements LocationListene
     @Override
     public void onCreate() {
         super.onCreate();
-        cameras = SpeedCameraStore.get(this);
+        cameras = new ArrayList<>(SpeedCameraStore.get(this));
+        cameras.addAll(SpeedCameraMarks.all(this));
         speech = new TextToSpeech(this, status -> {
             speechReady = status == TextToSpeech.SUCCESS;
             if (speechReady) {
@@ -81,9 +87,29 @@ public final class SpeedCameraService extends Service implements LocationListene
     @Override
     public int onStartCommand(final Intent intent, final int flags, final int startId) {
         startForeground(NOTIFICATION_ID, buildNotification());
+
+        if (intent != null && ACTION_MARK.equals(intent.getAction())) {
+            markHere();
+            return START_STICKY;
+        }
+
         alerts.reset();
         startListening();
         return START_STICKY;
+    }
+
+    /**
+     * Stores the current position as a speed trap the published data does not know about,
+     * and says so out loud, because the driver cannot look at the screen to check.
+     */
+    private void markHere() {
+        if (lastLocation == null) {
+            speak(getString(R.string.speedcam_mark_no_position));
+            return;
+        }
+        cameras.add(SpeedCameraMarks.add(this, lastLocation.getLatitude(),
+                lastLocation.getLongitude()));
+        speak(getString(R.string.speedcam_mark_saved));
     }
 
     private void startListening() {
@@ -105,6 +131,8 @@ public final class SpeedCameraService extends Service implements LocationListene
 
     @Override
     public void onLocationChanged(@NonNull final Location location) {
+        lastLocation = location;
+
         if (!location.hasBearing() || location.getSpeed() < MIN_SPEED_MPS) {
             // without movement there is no direction, and a stationary phone needs no warning
             return;
@@ -133,11 +161,16 @@ public final class SpeedCameraService extends Service implements LocationListene
         final String text = limitKmh > 0
                 ? getString(R.string.speedcam_alert_with_limit, rounded, limitKmh)
                 : getString(R.string.speedcam_alert, rounded);
+        speak(text);
+    }
 
+    private void speak(@NonNull final String text) {
+        if (!speechReady) {
+            return;
+        }
         if (MainActivity.DEBUG) {
             Log.d(TAG, "announcing: " + text);
         }
-
         duckMusic();
         speech.speak(text, TextToSpeech.QUEUE_ADD, null, "speedcam");
     }
@@ -179,11 +212,18 @@ public final class SpeedCameraService extends Service implements LocationListene
                 new Intent(this, MainActivity.class),
                 PendingIntent.FLAG_IMMUTABLE | PendingIntent.FLAG_UPDATE_CURRENT);
 
+        final PendingIntent mark = PendingIntent.getService(this, 1,
+                new Intent(this, SpeedCameraService.class).setAction(ACTION_MARK),
+                PendingIntent.FLAG_IMMUTABLE | PendingIntent.FLAG_UPDATE_CURRENT);
+
         return new NotificationCompat.Builder(this, CHANNEL_ID)
                 .setSmallIcon(R.drawable.ic_newpipe_triangle_white)
                 .setContentTitle(getString(R.string.speedcam_running_title))
                 .setContentText(getString(R.string.speedcam_running_text, cameras.size()))
                 .setContentIntent(open)
+                // a wide target on the lock screen, so a speed trap can be marked without
+                // looking at the phone
+                .addAction(R.drawable.ic_add, getString(R.string.speedcam_mark_action), mark)
                 .setOngoing(true)
                 .setPriority(NotificationCompat.PRIORITY_LOW)
                 .build();

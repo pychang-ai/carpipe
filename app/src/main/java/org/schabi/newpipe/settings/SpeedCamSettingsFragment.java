@@ -1,9 +1,13 @@
 package org.schabi.newpipe.settings;
 
 import android.Manifest;
+import android.content.ActivityNotFoundException;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.media.AudioAttributes;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.speech.tts.TextToSpeech;
 import android.widget.Toast;
 
@@ -56,6 +60,10 @@ public class SpeedCamSettingsFragment extends BasePreferenceFragment {
             playDemoWarning();
             return true;
         }
+        if (getString(R.string.speedcam_battery_key).equals(preference.getKey())) {
+            openBatterySettings();
+            return true;
+        }
         return super.onPreferenceTreeClick(preference);
     }
 
@@ -89,6 +97,24 @@ public class SpeedCamSettingsFragment extends BasePreferenceFragment {
                     .putBoolean(getString(R.string.speedcam_enabled_key), false).apply();
             setPreferenceScreen(null);
             addPreferencesFromResourceRegistry();
+        }
+    }
+
+    /**
+     * Opens the system list where an app can be exempted from power saving. Phone makers put
+     * this in different places, so the general battery screen is the fallback that always works.
+     */
+    private void openBatterySettings() {
+        try {
+            startActivity(new Intent(Settings.ACTION_IGNORE_BATTERY_OPTIMIZATION_SETTINGS));
+        } catch (final ActivityNotFoundException e) {
+            try {
+                startActivity(new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
+                        Uri.fromParts("package", requireContext().getPackageName(), null)));
+            } catch (final ActivityNotFoundException ignored) {
+                Toast.makeText(requireContext(), R.string.general_error, Toast.LENGTH_SHORT)
+                        .show();
+            }
         }
     }
 

@@ -90,6 +90,11 @@
     <string name="speedcam_running_title">Driving mode is on</string>
     <string name="speedcam_running_text">Watching for %1$d speed cameras</string>
     <string name="speedcam_needs_location">Camera warnings need permission to use your location while driving</string>
+    <string name="speedcam_mark_action">Mark a trap here</string>
+    <string name="speedcam_mark_saved">Speed trap marked</string>
+    <string name="speedcam_mark_no_position">No position yet, nothing was marked</string>
+    <string name="speedcam_battery_title">Keep running with the screen off</string>
+    <string name="speedcam_battery_summary">Some phones stop background apps to save power, which silences the warning mid-journey. Open the battery settings to allow carpipe to keep running</string>
     <string name="ui_scale_title">Interface scale</string>
     <string name="ui_scale_normal">Normal</string>
     <string name="ui_scale_large">Large (115%)</string>
