@@ -1,0 +1,197 @@
+<!-- artifact: https://claude.ai/code/artifact/06689230-8121-467b-a3a9-2416cce1c723 -->
+<title>剩下的工作與語音風格</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@500;700&family=Noto+Sans+TC:wght@400;500;700&display=swap">
+
+<style>
+:root{
+  --ground:#F5F4F1; --surface:#FFFFFF; --sunk:#EDECE7;
+  --ink:#1B1A17; --ink-2:#403E37; --muted:#6E6C62; --rule:#DEDCD4; --rule-2:#CBC8BE;
+  --dab:#8A4B25;
+  --hem:#3F4C7C; --hem-soft:#E5E7F1;
+  --ok:#3D6650;  --ok-soft:#E3EDE6;
+  --warn:#8F6416; --warn-soft:#F6EDDA;
+  --bad:#963428; --bad-soft:#F6E4E1;
+  --display:"Noto Serif TC","Iowan Old Style","Palatino Linotype",Palatino,Georgia,serif;
+  --body:"Noto Sans TC","Segoe UI Variable Text","Microsoft JhengHei UI",system-ui,sans-serif;
+  --mono:"Cascadia Mono",Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --ground:#141519; --surface:#1D1E23; --sunk:#232429;
+    --ink:#E9E8E2; --ink-2:#C6C4BC; --muted:#95948B; --rule:#2E3037; --rule-2:#3C3F47;
+    --dab:#D08A5A; --hem:#93A0DA; --hem-soft:#1E2233;
+    --ok:#7FB394; --ok-soft:#1A2620; --warn:#CFA85A; --warn-soft:#2C2416;
+    --bad:#D9796E; --bad-soft:#2E1C1A;
+  }
+}
+:root[data-theme="dark"]{
+  --ground:#141519; --surface:#1D1E23; --sunk:#232429;
+  --ink:#E9E8E2; --ink-2:#C6C4BC; --muted:#95948B; --rule:#2E3037; --rule-2:#3C3F47;
+  --dab:#D08A5A; --hem:#93A0DA; --hem-soft:#1E2233;
+  --ok:#7FB394; --ok-soft:#1A2620; --warn:#CFA85A; --warn-soft:#2C2416;
+  --bad:#D9796E; --bad-soft:#2E1C1A;
+}
+body{ background:var(--ground); color:var(--ink); font-family:var(--body); font-size:16px; line-height:1.75; margin:0; }
+.wrap{ max-width:980px; margin:0 auto; padding:48px 24px 96px; }
+.eyebrow{ font-size:12px; letter-spacing:.16em; text-transform:uppercase; color:var(--muted); font-weight:700; margin:0 0 10px; }
+h1{ font-family:var(--display); font-weight:700; font-size:40px; line-height:1.25; margin:0 0 8px; text-wrap:balance; }
+.sub{ color:var(--ink-2); margin:0 0 32px; max-width:64ch; }
+h2{ font-family:var(--display); font-size:26px; font-weight:700; line-height:1.3; margin:0 0 4px; text-wrap:balance; padding-bottom:10px; border-bottom:2px solid var(--dab); }
+h3{ font-family:var(--display); font-size:19px; font-weight:700; margin:16px 0 2px; }
+section{ margin-top:56px; }
+.stack{ display:flex; flex-direction:column; gap:18px; }
+p{ margin:0; max-width:70ch; }
+.hero{ background:var(--surface); border:1px solid var(--rule); border-top:4px solid var(--dab); padding:28px; margin-bottom:32px; display:flex; flex-wrap:wrap; gap:28px; align-items:baseline; }
+.hero .big{ font-family:var(--display); font-size:52px; font-weight:700; line-height:1; color:var(--dab); font-variant-numeric:tabular-nums; }
+.hero .big small{ font-size:20px; color:var(--muted); font-weight:500; }
+.hero p{ flex:1 1 320px; color:var(--ink-2); }
+.tablebox{ overflow-x:auto; border:1px solid var(--rule); background:var(--surface); }
+table{ border-collapse:collapse; width:100%; min-width:700px; font-size:15px; }
+th,td{ text-align:left; padding:11px 14px; border-bottom:1px solid var(--rule); vertical-align:top; }
+th{ background:var(--sunk); font-size:12px; letter-spacing:.08em; text-transform:uppercase; color:var(--muted); font-weight:700; white-space:nowrap; }
+tbody tr:last-child td{ border-bottom:none; }
+td.num{ font-variant-numeric:tabular-nums; white-space:nowrap; color:var(--muted); font-family:var(--mono); font-size:13px; }
+code{ font-family:var(--mono); font-size:13px; background:var(--sunk); padding:1px 5px; border:1px solid var(--rule); }
+.pill{ display:inline-block; font-size:12px; font-weight:700; padding:2px 9px; white-space:nowrap; border:1px solid transparent; }
+.pill.you{ background:var(--warn-soft); color:var(--warn); border-color:var(--warn); }
+.pill.me{ background:var(--ok-soft); color:var(--ok); border-color:var(--ok); }
+.pill.wait{ background:var(--hem-soft); color:var(--hem); border-color:var(--hem); }
+.pill.no{ background:var(--bad-soft); color:var(--bad); border-color:var(--bad); }
+.pill.rec{ background:var(--ok-soft); color:var(--ok); border-color:var(--ok); }
+.daily{ background:var(--hem-soft); border-left:4px solid var(--hem); padding:16px 20px; display:flex; flex-direction:column; gap:6px; }
+.daily .tag{ font-size:12px; letter-spacing:.1em; color:var(--hem); font-weight:700; }
+.daily p{ color:var(--ink-2); }
+.honest{ background:var(--bad-soft); border:1px solid var(--bad); padding:20px 24px; display:flex; flex-direction:column; gap:12px; }
+.honest h2{ border-bottom-color:var(--bad); color:var(--bad); margin-bottom:2px; }
+.honest ul{ margin:0; padding-left:20px; display:flex; flex-direction:column; gap:8px; }
+.honest li{ color:var(--ink-2); }
+ul.plain{ margin:0; padding-left:20px; display:flex; flex-direction:column; gap:6px; }
+ul.plain li{ color:var(--ink-2); }
+footer{ margin-top:64px; padding-top:18px; border-top:1px solid var(--rule); color:var(--muted); font-size:13px; }
+</style>
+
+<div class="wrap">
+
+  <p class="eyebrow">carpipe 現況</p>
+  <h1>剩下的工作，與語音要不要有個性</h1>
+  <p class="sub">循環鍵、介面縮放、測速警示三項功能都已完成。這份列出還沒做完的事各歸誰做，並評估把警示語音換成不同人設的四種做法。2026 年 8 月 28 日。</p>
+
+  <div class="hero">
+    <div class="big">3<small> 項功能已完成</small></div>
+    <p>剩下的分三類：等你在手機與車上驗收的、等你拍板才動工的、以及我可以直接做的 Dropbox 備份同步。</p>
+  </div>
+
+  <section class="stack">
+    <h2>一、剩下的工作清單</h2>
+
+    <h3>需要你做的</h3>
+    <div class="tablebox">
+      <table>
+        <thead><tr><th>#</th><th>工作</th><th>說明</th><th>誰做</th></tr></thead>
+        <tbody>
+          <tr><td class="num">1</td><td>安裝 v4 並跑手動檢查表</td><td>28 項，約 40 分鐘。循環鍵、介面縮放、原有功能回歸各區逐項勾</td><td><span class="pill you">你</span></td></tr>
+          <tr><td class="num">2</td><td>上車實測</td><td>6 項：背景播放、方向盤按鍵、大字好不好按、循環設定是否還在、有線與藍牙各測一次、連續 30 分鐘不被省電機制殺掉</td><td><span class="pill you">你</span></td></tr>
+          <tr><td class="num">3</td><td>測速警示實車驗證</td><td>經過已知測速點時是否準時報、音樂有沒有壓低又恢復、關螢幕是否仍運作</td><td><span class="pill you">你</span></td></tr>
+          <tr><td class="num">4</td><td>註冊 Dropbox 應用程式</td><td><b>只有你能做</b>，要用你的 Dropbox 帳號登入。約十分鐘，我會寫成一頁讓你照著點</td><td><span class="pill you">你</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3>等你拍板才動工</h3>
+    <div class="tablebox">
+      <table>
+        <thead><tr><th>#</th><th>工作</th><th>選項</th><th>估時</th></tr></thead>
+        <tbody>
+          <tr><td class="num">5</td><td>紅色介面換色</td><td>甲、直接換成指定顏色／乙、設定裡加強調色選單／丙、保留紅色但調暗</td><td>2 小時至半天</td></tr>
+          <tr><td class="num">6</td><td>警示語音風格</td><td>見第二節，四案</td><td>半天至三天</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3>我可以直接做的</h3>
+    <div class="tablebox">
+      <table>
+        <thead><tr><th>#</th><th>工作</th><th>說明</th><th>估時</th></tr></thead>
+        <tbody>
+          <tr><td class="num">7</td><td>Dropbox 備份同步八項</td><td>授權流程、上傳備份、自動排程與保留七份、還原流程、設定介面、錯誤處理、換機驗證。除了第 4 項註冊之外我全包</td><td>5–6 天</td></tr>
+          <tr><td class="num">8</td><td>依實測回報修正</td><td>你在手機或車上發現的問題，逐項轉成任務修掉</td><td>視情況</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3>暫緩</h3>
+    <ul class="plain">
+      <li><b>Android Auto 支援</b>——非官方用戶端上不了車機螢幕，你先前指示待實車測試後再議。</li>
+      <li><b>裝置自動測試</b>——按鍵外觀類的自動化要建模擬器環境、每次跑數分鐘，等功能穩定再評估，現階段用手動檢查表更划算。</li>
+    </ul>
+  </section>
+
+  <section class="stack">
+    <h2>二、語音風格：四種做法</h2>
+    <p>先說結論：<b>要有「仙女、少女、熟女」這種明顯不同的人設，只有預錄音檔做得到</b>；系統語音能做的是音高與語速的變化，聽起來是同一把嗓子的不同狀態，不是不同的人。</p>
+
+    <div class="tablebox">
+      <table>
+        <thead><tr><th>案</th><th>做法</th><th>能做到什麼</th><th>限制</th><th>估時</th></tr></thead>
+        <tbody>
+          <tr>
+            <td><b>甲</b></td>
+            <td>音高與語速預設</td>
+            <td>調整同一個語音引擎的音高與語速，做出四種風格：少女偏高偏快、標準、熟女偏低偏慢、仙女偏高偏慢帶點飄</td>
+            <td>本質仍是同一把嗓音，調過頭會失真變機械聲</td>
+            <td>半天</td>
+          </tr>
+          <tr>
+            <td><b>乙</b></td>
+            <td>列出手機上已裝的中文語音讓你挑</td>
+            <td>把你手機裡實際可用的中文語音全部列出來，逐一試聽後選一個</td>
+            <td>數量取決於你裝了哪些語音引擎，通常只有兩到四種，且多為女聲</td>
+            <td>半天</td>
+          </tr>
+          <tr>
+            <td><b>丙</b></td>
+            <td>內建預錄音檔</td>
+            <td><b>真正做得出人設</b>。把「前方」「五百」「公尺測速，限速」「六十」等片段預錄好，播放時拼接。神盾聽起來有個性就是這個原理</td>
+            <td>要錄約 40 個片段；換一種人設就得整組重錄；app 體積增加；改講法要重錄</td>
+            <td>2–3 天</td>
+          </tr>
+          <tr>
+            <td>丁</td>
+            <td>雲端語音服務</td>
+            <td>音色最自然，人設可任選</td>
+            <td><span class="pill no">不建議</span> 要網路、要帳號、要付費，隧道沒訊號就啞掉，且違背這個 app 離線零帳號的設計</td>
+            <td>—</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="daily">
+      <b class="tag">日常例子</b>
+      <p>甲案和丙案的差別，像是同一個人用不同語氣念稿，跟換一個人來念。前者你聽得出是同一個人在裝可愛或裝成熟；後者才是真的換人。你說的仙女、少女、熟女屬於後者。</p>
+    </div>
+
+    <h3>建議</h3>
+    <ul class="plain">
+      <li><b>先做甲加乙，合計約一天。</b>做完你會得到四種風格預設，加上一份你手機真正可用的語音清單，每一項都能當場試聽。</li>
+      <li><b>試用一週後再決定要不要做丙。</b>因為丙的成本主要在錄音，而錄之前得先知道你要的是什麼調性、講什麼詞——這些聽過甲乙之後才講得清楚。</li>
+      <li><b>錄音來源要先想好。</b>丙案的聲音可以是你自己錄、找人錄、或用電腦合成後存成檔案。<b>不模仿特定真人</b>，例如藝人或主播的聲音，那會有肖像與人格權的問題；泛用人設沒有這個顧慮。</li>
+    </ul>
+  </section>
+
+  <section class="stack honest">
+    <h2>三、必須說清楚的</h2>
+    <ul>
+      <li><b>測速警示還沒有在真實道路上驗證過。</b>邏輯有 29 個自動測試守著，但「經過真的測速桿時會不會準時報」只能實車驗。第一次上路請留意報得太早或太晚，回報我調整。</li>
+      <li><b>甲案的四種風格會受你手機的語音引擎影響。</b>同樣的音高與語速設定，在不同引擎上聽起來不完全一樣，所以做完要以你手機實際聽到的為準來微調。</li>
+      <li><b>Dropbox 同步卡在註冊那一步。</b>那是唯一我無法代勞的環節，你不做我就無法往下寫，這一項會一直停著。</li>
+    </ul>
+  </section>
+
+  <footer>
+    carpipe 現況與後續，2026-08-28。進度單一事實來源為 repo 根目錄的 <code>PROGRESS.md</code>；本表拍板後拆成子任務寫回該檔。
+  </footer>
+
+</div>
