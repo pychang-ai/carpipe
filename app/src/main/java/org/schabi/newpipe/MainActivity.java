@@ -85,7 +85,6 @@ import org.schabi.newpipe.settings.UpdateSettingsFragment;
 import org.schabi.newpipe.settings.migration.MigrationManager;
 import org.schabi.newpipe.util.Constants;
 import org.schabi.newpipe.util.DeviceUtils;
-import org.schabi.newpipe.util.KioskTranslator;
 import org.schabi.newpipe.util.Localization;
 import org.schabi.newpipe.util.NavigationHelper;
 import org.schabi.newpipe.util.PeertubeHelper;
@@ -279,14 +278,10 @@ public class MainActivity extends AppCompatActivity {
      * @throws ExtractionException if the service didn't provide available kiosks
      */
     private void addDrawerMenuForCurrentService() throws ExtractionException {
-        //Tabs
-        drawerLayoutBinding.navigation.getMenu()
-                .add(R.id.menu_tabs_group, ITEM_ID_SUBSCRIPTIONS, ORDER,
-                        R.string.tab_subscriptions)
-                .setIcon(R.drawable.ic_tv);
-        drawerLayoutBinding.navigation.getMenu()
-                .add(R.id.menu_tabs_group, ITEM_ID_FEED, ORDER, R.string.fragment_feed_title)
-                .setIcon(R.drawable.ic_subscriptions);
+        // Only what a personal build is used for: the driver's own playlists, downloads and
+        // history. The subscription and feed entries, and the service's browse pages such as
+        // trending, gaming and live, are left out of the drawer; the pages themselves are
+        // untouched and still reachable from the main page tabs.
         drawerLayoutBinding.navigation.getMenu()
                 .add(R.id.menu_tabs_group, ITEM_ID_BOOKMARKS, ORDER, R.string.tab_bookmarks)
                 .setIcon(R.drawable.ic_bookmark);
@@ -296,20 +291,6 @@ public class MainActivity extends AppCompatActivity {
         drawerLayoutBinding.navigation.getMenu()
                 .add(R.id.menu_tabs_group, ITEM_ID_HISTORY, ORDER, R.string.action_history)
                 .setIcon(R.drawable.ic_history);
-
-        //Kiosks
-        final int currentServiceId = ServiceHelper.getSelectedServiceId(this);
-        final StreamingService service = NewPipe.getService(currentServiceId);
-
-        int kioskMenuItemId = 0;
-
-        for (final String ks : service.getKioskList().getAvailableKiosks()) {
-            drawerLayoutBinding.navigation.getMenu()
-                    .add(R.id.menu_kiosks_group, kioskMenuItemId, 0, KioskTranslator
-                            .getTranslatedKioskName(ks, this))
-                    .setIcon(KioskTranslator.getKioskIcon(ks));
-            kioskMenuItemId++;
-        }
 
         //Settings and About
         drawerLayoutBinding.navigation.getMenu()

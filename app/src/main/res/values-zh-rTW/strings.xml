@@ -43,7 +43,7 @@
     <string name="speedcam_mark_saved">已標記測速點</string>
     <string name="speedcam_mark_no_position">尚未取得定位，未標記</string>
     <string name="speedcam_battery_title">關螢幕後仍持續運作</string>
-    <string name="speedcam_battery_summary">部分手機會為了省電關掉背景程式，導致警示在半路失效。開啟電池設定，允許 carpipe 持續執行</string>
+    <string name="speedcam_battery_summary">部分手機會為了省電關掉背景程式，導致警示在半路失效。開啟電池設定，允許 CAI PP 持續執行</string>
     <string name="ui_scale_title">介面縮放</string>
     <string name="ui_scale_normal">標準</string>
     <string name="ui_scale_large">放大（115%）</string>
