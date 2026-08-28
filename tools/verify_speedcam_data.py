@@ -90,8 +90,21 @@ def check(frame):
     return kept, failures, notes
 
 
+def write_asset(kept, path):
+    """Writes the smallest form the app needs: where, how fast, which way."""
+    asset = pd.DataFrame({
+        "lat": pd.to_numeric(kept["Latitude"]).round(6),
+        "lon": pd.to_numeric(kept["Longitude"]).round(6),
+        "limit": pd.to_numeric(kept["limit"], errors="coerce").fillna(0).astype(int),
+        "direct": kept["direct"].astype(str).str.strip(),
+    })
+    asset = asset.drop_duplicates(subset=["lat", "lon", "direct"])
+    asset.to_csv(path, index=False, encoding="utf-8", lineterminator="\n")
+    return len(asset)
+
+
 def main():
-    if len(sys.argv) not in (2, 3):
+    if len(sys.argv) not in (2, 3, 4):
         print(__doc__)
         return 2
 
@@ -107,9 +120,12 @@ def main():
             print("  %s" % failure)
         return 1
 
-    if len(sys.argv) == 3:
+    if len(sys.argv) >= 3:
         kept.to_csv(sys.argv[2], index=False, encoding="utf-8")
         print("\nwrote %s" % sys.argv[2])
+
+    if len(sys.argv) == 4:
+        print("wrote %s (%d cameras)" % (sys.argv[3], write_asset(kept, sys.argv[3])))
 
     print("\nPASS: the data can be built into the app")
     return 0
