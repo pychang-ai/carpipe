@@ -23,6 +23,11 @@
     <string name="kore_not_found">要安裝缺少的 Kore 應用程式嗎？</string>
     <string name="show_play_with_kodi_title">顯示「使用 Kodi 播放」的選項</string>
     <string name="default_audio_format_title">預設音訊格式</string>
+    <string name="ui_scale_title">介面縮放</string>
+    <string name="ui_scale_normal">標準</string>
+    <string name="ui_scale_large">放大（115%）</string>
+    <string name="ui_scale_larger">更大（130%）</string>
+    <string name="ui_scale_largest">最大（150%）</string>
     <string name="theme_title">主題</string>
     <string name="dark_theme_title">深色</string>
     <string name="light_theme_title">淺色</string>
