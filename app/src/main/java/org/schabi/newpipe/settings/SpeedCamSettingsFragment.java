@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.media.AudioAttributes;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.speech.tts.TextToSpeech;
@@ -19,6 +20,8 @@ import androidx.preference.Preference;
 import org.schabi.newpipe.R;
 import org.schabi.newpipe.speedcam.SpeedCameraService;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 
 /**
@@ -75,8 +78,17 @@ public class SpeedCamSettingsFragment extends BasePreferenceFragment {
     private void askForLocation() {
         Toast.makeText(requireContext(), R.string.speedcam_needs_location, Toast.LENGTH_LONG)
                 .show();
+
+        final List<String> wanted = new ArrayList<>();
+        wanted.add(Manifest.permission.ACCESS_FINE_LOCATION);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            // without this the car stereo connection never reaches us, so driving mode
+            // would have to be switched on by hand every trip
+            wanted.add(Manifest.permission.BLUETOOTH_CONNECT);
+        }
+
         ActivityCompat.requestPermissions(requireActivity(),
-                new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, LOCATION_REQUEST);
+                wanted.toArray(new String[0]), LOCATION_REQUEST);
     }
 
     @Override

@@ -17,6 +17,8 @@
          running with the screen off to give them -->
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE_LOCATION" />
+    <!-- connecting to the car stereo is what starts and ends driving mode -->
+    <uses-permission android:name="android.permission.BLUETOOTH_CONNECT" />
 
     <!-- We need to be able to open links in the browser on API 30+ -->
     <queries>
@@ -109,6 +111,15 @@
             android:name=".speedcam.SpeedCameraService"
             android:exported="false"
             android:foregroundServiceType="location" />
+
+        <receiver
+            android:name=".speedcam.CarBluetoothReceiver"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.bluetooth.device.action.ACL_CONNECTED" />
+                <action android:name="android.bluetooth.device.action.ACL_DISCONNECTED" />
+            </intent-filter>
+        </receiver>
 
         <service
             android:name="androidx.work.impl.foreground.SystemForegroundService"
