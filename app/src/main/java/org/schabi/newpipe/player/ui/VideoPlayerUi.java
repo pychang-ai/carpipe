@@ -991,8 +991,9 @@ public abstract class VideoPlayerUi extends PlayerUi implements SeekBar.OnSeekBa
         };
         binding.repeatButton.setImageResource(resId);
         binding.repeatButtonMain.setImageResource(resId);
-        // dim the main repeat button when repeating is off, so its state is readable at a glance
-        binding.repeatButtonMain.setImageAlpha(repeatMode == REPEAT_MODE_OFF ? 77 : 255);
+        // the button sits on a black video, so even the off state stays clearly visible; only the
+        // active state goes to full white, which is the difference the driver has to spot
+        binding.repeatButtonMain.setImageAlpha(repeatMode == REPEAT_MODE_OFF ? 160 : 255);
     }
 
     //endregion
