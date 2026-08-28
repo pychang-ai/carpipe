@@ -107,6 +107,7 @@
     <string name="speedcam_test_summary">Plays one warning so the volume can be set before driving</string>
     <string name="speedcam_alert_with_limit">Speed camera in %1$d meters, limit %2$d</string>
     <string name="speedcam_alert">Speed camera in %1$d meters</string>
+    <string name="speedcam_alert_over_limit">Speed camera in %1$d meters, limit %2$d, please slow down</string>
     <string name="speedcam_channel_name">Driving mode</string>
     <string name="speedcam_channel_description">Shown while speed camera warnings are running</string>
     <string name="speedcam_running_title">Driving mode is on</string>

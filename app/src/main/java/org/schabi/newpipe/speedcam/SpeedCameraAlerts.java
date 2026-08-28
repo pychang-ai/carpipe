@@ -26,6 +26,24 @@ public final class SpeedCameraAlerts {
     private final Set<SpeedCamera> announced = new HashSet<>();
 
     /**
+     * How far above the limit still counts as not speeding. A car's own speedometer reads a
+     * few kilometres high by design, so without this margin the warning would scold the
+     * driver while the dashboard shows a legal speed, and be ignored soon after.
+     */
+    public static final int SPEED_MARGIN_KMH = 5;
+
+    /**
+     * Tells whether the car is going fast enough for the warning to say so.
+     *
+     * @param speedKmh the speed the phone measured
+     * @param limitKmh the limit the camera enforces, 0 when unknown
+     * @return true when the driver should be told to slow down
+     */
+    public static boolean isOverLimit(final float speedKmh, final int limitKmh) {
+        return limitKmh > 0 && speedKmh > limitKmh + SPEED_MARGIN_KMH;
+    }
+
+    /**
      * How early to speak, chosen from the limit the camera enforces: a warning that is
      * right for a motorway comes far too early in town, and one right for town comes
      * too late to do anything about at speed.

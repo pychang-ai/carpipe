@@ -102,6 +102,27 @@ class SpeedCameraAlertsTest {
         assertEquals(200, SpeedCameraAlerts.warningDistanceMeters(0))
     }
 
+    @Test fun `being told to slow down waits until the car really is over the limit`() {
+        // a car's own speedometer reads a few kilometres high, so a driver seeing 62 on the
+        // dashboard at a 60 limit is not speeding and must not be scolded
+        assertEquals(false, SpeedCameraAlerts.isOverLimit(58f, 60))
+        assertEquals(false, SpeedCameraAlerts.isOverLimit(60f, 60))
+        assertEquals(false, SpeedCameraAlerts.isOverLimit(64f, 60))
+        assertEquals(false, SpeedCameraAlerts.isOverLimit(65f, 60))
+
+        assertEquals(true, SpeedCameraAlerts.isOverLimit(66f, 60))
+        assertEquals(true, SpeedCameraAlerts.isOverLimit(95f, 60))
+    }
+
+    @Test fun `a camera with no published limit never says slow down`() {
+        // saying "slow down" without a number to slow down to is noise, not help
+        assertEquals(false, SpeedCameraAlerts.isOverLimit(120f, 0))
+    }
+
+    @Test fun `standing still is never over the limit`() {
+        assertEquals(false, SpeedCameraAlerts.isOverLimit(0f, 40))
+    }
+
     @Test fun `turning the distance setting up warns from further out`() {
         val camera = camera(atMetersNorth = 500.0, limit = 60, watches = "南向北")
 

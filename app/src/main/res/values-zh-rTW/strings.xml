@@ -56,6 +56,7 @@
     <string name="speedcam_test_summary">播放一次警示，讓你在開車前把音量調好</string>
     <string name="speedcam_alert_with_limit">前方 %1$d 公尺測速，限速 %2$d</string>
     <string name="speedcam_alert">前方 %1$d 公尺測速</string>
+    <string name="speedcam_alert_over_limit">前方 %1$d 公尺測速，限速 %2$d，請減速</string>
     <string name="speedcam_channel_name">行車模式</string>
     <string name="speedcam_channel_description">測速警示執行中時顯示</string>
     <string name="speedcam_running_title">行車模式進行中</string>

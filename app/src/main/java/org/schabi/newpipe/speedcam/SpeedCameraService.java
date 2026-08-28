@@ -146,21 +146,29 @@ public final class SpeedCameraService extends Service implements LocationListene
 
         final int distance = (int) Geo.distanceMeters(location.getLatitude(),
                 location.getLongitude(), camera.latitude(), camera.longitude());
-        announce(distance, camera.limitKmh());
+        // metres per second is what the phone reports; drivers think in kilometres per hour
+        announce(distance, camera.limitKmh(), location.getSpeed() * 3.6f);
     }
 
     private float warningScale() {
         return SpeedCameraSettings.warningScale(this);
     }
 
-    private void announce(final int distanceMeters, final int limitKmh) {
+    private void announce(final int distanceMeters, final int limitKmh, final float speedKmh) {
         if (!speechReady) {
             return;
         }
         final int rounded = Math.max(50, Math.round(distanceMeters / 50f) * 50);
-        final String text = limitKmh > 0
-                ? getString(R.string.speedcam_alert_with_limit, rounded, limitKmh)
-                : getString(R.string.speedcam_alert, rounded);
+
+        final String text;
+        if (limitKmh <= 0) {
+            text = getString(R.string.speedcam_alert, rounded);
+        } else if (SpeedCameraAlerts.isOverLimit(speedKmh, limitKmh)) {
+            // the same warning every time stops being heard, so the one that matters differs
+            text = getString(R.string.speedcam_alert_over_limit, rounded, limitKmh);
+        } else {
+            text = getString(R.string.speedcam_alert_with_limit, rounded, limitKmh);
+        }
         speak(text);
     }
 
