@@ -24,7 +24,6 @@ import static com.google.android.exoplayer2.Player.DISCONTINUITY_REASON_SEEK_ADJ
 import static com.google.android.exoplayer2.Player.DISCONTINUITY_REASON_SKIP;
 import static com.google.android.exoplayer2.Player.DiscontinuityReason;
 import static com.google.android.exoplayer2.Player.Listener;
-import static com.google.android.exoplayer2.Player.REPEAT_MODE_ALL;
 import static com.google.android.exoplayer2.Player.REPEAT_MODE_OFF;
 import static com.google.android.exoplayer2.Player.REPEAT_MODE_ONE;
 import static com.google.android.exoplayer2.Player.RepeatMode;
@@ -1268,19 +1267,8 @@ public final class Player implements PlaybackListener, Listener {
 
     public void cycleNextRepeatMode() {
         if (!exoPlayerIsNull()) {
-            @RepeatMode final int repeatMode;
-            switch (simpleExoPlayer.getRepeatMode()) {
-                case REPEAT_MODE_OFF:
-                    repeatMode = REPEAT_MODE_ONE;
-                    break;
-                case REPEAT_MODE_ONE:
-                    repeatMode = REPEAT_MODE_ALL;
-                    break;
-                case REPEAT_MODE_ALL:
-                default:
-                    repeatMode = REPEAT_MODE_OFF;
-                    break;
-            }
+            @RepeatMode final int repeatMode =
+                    PlayerHelper.nextRepeatMode(simpleExoPlayer.getRepeatMode());
             simpleExoPlayer.setRepeatMode(repeatMode);
             // save the new repeat mode so it can be restored in a future session
             getPrefs().edit().putInt(

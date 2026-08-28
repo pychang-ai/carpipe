@@ -103,20 +103,20 @@ footer{ margin-top:64px; padding-top:18px; border-top:1px solid var(--rule); col
   <p class="sub">你問的是對的：這個專案目前<b>沒有</b>測試規格。這份把缺口攤開，並給出每項功能對應的測試案例、由誰執行、以及什麼時候跑。</p>
 
   <div class="hero">
-    <div class="big">0<small> 項自訂功能有自動測試</small></div>
-    <p>循環鍵與介面縮放這兩項我們自己寫的功能，目前的驗證只有「編譯過」與「程式碼規範過」，等於只證明程式寫得合法，沒有證明它做對事。這是必須補的洞。</p>
+    <div class="big">7<small> 個自動測試已上線</small></div>
+    <p>第一批自動測試已寫完並全數通過，測試總數從 155 增為 162。過程中它抓到一個真實缺陷：介面縮放原本會接受 0 或負數這種無效設定值，那會讓整個畫面塌掉，現在已擋下。</p>
   </div>
 
   <div class="cards">
-    <div class="verdict bad">
+    <div class="verdict ok">
       <span class="q">測試規格</span>
-      <span class="a">尚未建立</span>
-      <span class="why">沒有文件規定每項功能該驗什麼、驗到什麼程度算過。</span>
+      <span class="a">已建立</span>
+      <span class="why">44 個測試案例，逐項標明驗證方式與執行時機。</span>
     </div>
     <div class="verdict warn">
       <span class="q">自訂功能覆蓋</span>
-      <span class="a">零覆蓋</span>
-      <span class="why">兩項新功能沒有任何自動測試守著，日後同步上游更新可能被改壞而不自知。</span>
+      <span class="a">純邏輯已守住</span>
+      <span class="why">可在電腦上測的部分已完成；牽涉畫面與設定儲存的部分仍需裝置測試。</span>
     </div>
     <div class="verdict ok">
       <span class="q">既有基礎設施</span>
@@ -256,18 +256,78 @@ footer{ margin-top:64px; padding-top:18px; border-top:1px solid var(--rule); col
     </ul>
   </section>
 
+  <section class="stack">
+    <h2>四、第一批執行結果與案例補充</h2>
+    <p>核准後已完成第一批，並在過程中評估出四個原本漏掉的案例。</p>
+
+    <h3>已完成：7 個自動測試</h3>
+    <div class="tablebox">
+      <table>
+        <thead><tr><th>對應案例</th><th>測試內容</th><th>結果</th></tr></thead>
+        <tbody>
+          <tr><td class="num">A2-1</td><td>按循環鍵依序走過關閉、單曲、全部，第三次回到原點</td><td><span class="pill auto">通過</span></td></tr>
+          <tr><td class="num">A3-3</td><td>儲存值異常時退回關閉，不會落在使用者沒選過的模式</td><td><span class="pill auto">通過</span></td></tr>
+          <tr><td class="num">A5-6</td><td>四段縮放值都被正確接受</td><td><span class="pill auto">通過</span></td></tr>
+          <tr><td class="num">A5-6</td><td>設定遺失或格式錯誤時退回 100%</td><td><span class="pill auto">通過</span></td></tr>
+          <tr><td class="num">A5-6</td><td><b>0、負數、過大的縮放值一律退回 100%</b></td><td><span class="pill auto">通過</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="daily">
+      <b class="tag">寫測試當場的收穫</b>
+      <p>兩件事值得記錄。其一，原本的縮放程式會照單全收任何數值，若設定檔被寫入 0 或負數，整個畫面會塌掉；寫測試時發現並補上了範圍檢查。其二，我第一版測試自己寫錯了斷言，以為按四次回到原點，實際是三次——測試當場擋下這個錯誤。這正是自動測試的價值：它不只驗程式，也驗我們對功能的理解。</p>
+    </div>
+
+    <h3>評估後補充的四個案例</h3>
+    <div class="tablebox">
+      <table>
+        <thead><tr><th>#</th><th>案例</th><th>為什麼原本漏掉</th><th>方式</th></tr></thead>
+        <tbody>
+          <tr><td class="num">A2-4</td><td>從通知列的循環鍵切換後，回到 app 主播放器圖示同步更新</td><td>只想到 app 內的按鍵，忘了通知列也能切循環，兩處狀態可能不同步。</td><td><span class="pill hand">手動</span></td></tr>
+          <tr><td class="num">A3-5</td><td>在主播放器、背景播放、小視窗之間切換後，循環設定不變</td><td>三種播放模式共用同一個播放器物件，但切換時會重新初始化，是狀態最容易掉的地方。</td><td><span class="pill hand">手動</span></td></tr>
+          <tr><td class="num">A5-7</td><td>150% 時通知列的播放控制也不破版</td><td>原本只列了四個畫面，漏了通知列——而車上最常看的其實是它。</td><td><span class="pill hand">手動</span></td></tr>
+          <tr><td class="num">B10</td><td>匯出再匯入後，循環設定與縮放設定都跟著回來</td><td>我們新增的兩個設定若沒被納入備份，換手機就得重設，這正是任務 8 的目的。</td><td><span class="pill hand">手動</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>加上這四案，測試規格從 40 案增為 <b>44 案</b>。手動項目已整理成可勾選的檢查表：<code>docs/manual-test-checklist.md</code>。</p>
+
+    <h3>還沒自動化的部分與兩個選項</h3>
+    <p>這個 fork 的測試環境只有基本的測試框架，<b>沒有能在電腦上模擬 Android 的工具</b>，所以牽涉到「設定儲存」「畫面顯示」的案例目前無法在電腦上自動驗。兩條路可選：</p>
+    <div class="tablebox">
+      <table>
+        <thead><tr><th>選項</th><th>能多測到什麼</th><th>代價</th><th>建議</th></tr></thead>
+        <tbody>
+          <tr>
+            <td>甲、加裝 Android 模擬工具到測試環境</td>
+            <td>設定儲存的往返、縮放後的設定讀取，都能在電腦上秒級驗證</td>
+            <td>新增一個測試用的相依套件，與上游有小幅分歧；設定約半天</td>
+            <td><span class="pill dev">值得做</span> 這類「設定存了沒」的錯誤最常見也最難用眼睛看出來</td>
+          </tr>
+          <tr>
+            <td>乙、寫裝置測試，接手機或模擬器跑</td>
+            <td>連按鍵有沒有出現、圖示對不對都能自動驗</td>
+            <td>要建一個模擬器環境，每次跑數分鐘而非數秒</td>
+            <td><span class="pill hand">之後再說</span> 先靠手動檢查表，等功能穩定再投入</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
   <section class="stack honest">
-    <h2>四、必須承認的四件事</h2>
+    <h2>五、必須承認的四件事</h2>
     <ul>
       <li><b>先前的回報用詞不夠精確。</b>我說過「編譯與程式碼規範皆通過」，那是事實，但它容易被讀成「功能沒問題」。實際上到目前為止，<b>沒有任何一項功能被驗證過行為正確</b>。</li>
-      <li><b>兩項自訂功能零自動測試覆蓋。</b>最大的風險不是現在壞，而是日後同步上游更新時被改壞而沒人發現——那時你人在車上。</li>
+      <li><b>已上線的 7 個自動測試只守住純計算邏輯。</b>「設定有沒有真的存下來」「按鍵有沒有真的出現」這兩類仍靠人工，若不採用上面的甲案，這個缺口會一直在。</li>
       <li><b>有些項目本質上無法自動化。</b>實車、藍牙媒體鍵、手機廠商省電機制殺背景服務，這三類只能人工驗，這是限制不是偷懶。</li>
       <li><b>上游測試套件到今天才第一次跑。</b>結果是 155 個測試案例全數通過、零失敗，代表這個 fork 的基準線乾淨，我們新增的程式碼沒有弄壞原有邏輯。但這 155 案沒有一項碰到循環記憶或介面縮放，所以它證明的是「沒改壞舊的」，不是「新的做對了」。</li>
     </ul>
   </section>
 
   <footer>
-    carpipe 測試規格與案例對照，2026-08-28。共列 A 類 19 案、B 類 9 案、C 類 12 案，合計 40 個測試案例。核准後拆成子任務寫入 <code>PROGRESS.md</code> 追蹤。
+    carpipe 測試規格與案例對照，2026-08-28 第二版。共列 A 類 22 案、B 類 10 案、C 類 12 案，合計 44 個測試案例，其中 7 案已自動化並通過。手動項目見 <code>docs/manual-test-checklist.md</code>。
   </footer>
 
 </div>

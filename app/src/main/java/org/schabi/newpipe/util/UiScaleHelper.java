@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.res.Configuration;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.preference.PreferenceManager;
 
 import org.schabi.newpipe.R;
@@ -13,6 +14,9 @@ import org.schabi.newpipe.R;
  * Text and controls grow together, so the app stays both readable and tappable in a car.
  */
 public final class UiScaleHelper {
+    private static final float NO_SCALING = 1.0f;
+    private static final float MAX_SCALING = 2.0f;
+
     private UiScaleHelper() {
     }
 
@@ -26,7 +30,7 @@ public final class UiScaleHelper {
     @NonNull
     public static Context wrapContext(@NonNull final Context base) {
         final float scale = getScale(base);
-        if (scale == 1.0f) {
+        if (scale == NO_SCALING) {
             return base;
         }
 
@@ -44,15 +48,31 @@ public final class UiScaleHelper {
     }
 
     private static float getScale(@NonNull final Context context) {
-        final String value = PreferenceManager.getDefaultSharedPreferences(context)
-                .getString(context.getString(R.string.ui_scale_key), null);
+        return parseScale(PreferenceManager.getDefaultSharedPreferences(context)
+                .getString(context.getString(R.string.ui_scale_key), null));
+    }
+
+    /**
+     * Turns a stored setting into a usable scale factor. Anything missing, malformed or outside
+     * the offered range falls back to no scaling, because a zero or negative factor would leave
+     * the interface unusable. Kept free of Android dependencies so it can be unit tested.
+     *
+     * @param value the stored setting, may be null
+     * @return the scale factor to apply, 1.0 when the value cannot be used
+     */
+    static float parseScale(@Nullable final String value) {
         if (value == null) {
-            return 1.0f;
+            return NO_SCALING;
         }
+        final float scale;
         try {
-            return Float.parseFloat(value);
+            scale = Float.parseFloat(value);
         } catch (final NumberFormatException e) {
-            return 1.0f;
+            return NO_SCALING;
         }
+        if (scale < NO_SCALING || scale > MAX_SCALING) {
+            return NO_SCALING;
+        }
+        return scale;
     }
 }

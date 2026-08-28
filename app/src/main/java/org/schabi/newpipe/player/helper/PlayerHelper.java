@@ -22,6 +22,7 @@ import androidx.core.content.ContextCompat;
 import androidx.preference.PreferenceManager;
 
 import com.google.android.exoplayer2.PlaybackParameters;
+import com.google.android.exoplayer2.Player.RepeatMode;
 import com.google.android.exoplayer2.SeekParameters;
 import com.google.android.exoplayer2.source.ProgressiveMediaSource;
 import com.google.android.exoplayer2.trackselection.AdaptiveTrackSelection;
@@ -408,6 +409,24 @@ public final class PlayerHelper {
     public static int retrieveResizeModeFromPrefs(final Player player) {
         return player.getPrefs().getInt(player.getContext().getString(R.string.last_resize_mode),
                 AspectRatioFrameLayout.RESIZE_MODE_FIT);
+    }
+
+    /**
+     * Gives the repeat mode that follows the current one, cycling off, one and all.
+     * Kept free of Android dependencies so the cycle order can be unit tested.
+     *
+     * @param repeatMode the mode the player is in
+     * @return the mode the player should switch to
+     */
+    @RepeatMode
+    public static int nextRepeatMode(@RepeatMode final int repeatMode) {
+        return switch (repeatMode) {
+            case com.google.android.exoplayer2.Player.REPEAT_MODE_OFF
+                    -> com.google.android.exoplayer2.Player.REPEAT_MODE_ONE;
+            case com.google.android.exoplayer2.Player.REPEAT_MODE_ONE
+                    -> com.google.android.exoplayer2.Player.REPEAT_MODE_ALL;
+            default -> com.google.android.exoplayer2.Player.REPEAT_MODE_OFF;
+        };
     }
 
     @SuppressLint("SwitchIntDef") // only fit, fill and zoom are supported by NewPipe
