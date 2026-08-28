@@ -17,6 +17,12 @@
         app:iconSpaceReserved="false" />
 
     <PreferenceScreen
+        android:fragment="org.schabi.newpipe.settings.SpeedCamSettingsFragment"
+        android:icon="@drawable/ic_notifications"
+        android:title="@string/speedcam_settings_title"
+        app:iconSpaceReserved="false" />
+
+    <PreferenceScreen
         android:fragment="org.schabi.newpipe.settings.AppearanceSettingsFragment"
         android:icon="@drawable/ic_palette"
         android:title="@string/settings_category_appearance_title"

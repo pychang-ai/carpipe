@@ -1459,6 +1459,22 @@
         <item>@string/off</item>
     </string-array>
 
+    <string name="speedcam_enabled_key">speedcam_enabled</string>
+    <string name="speedcam_distance_key">speedcam_distance</string>
+    <string name="speedcam_test_key">speedcam_test</string>
+
+    <string name="speedcam_distance_default_value">1.0</string>
+    <string-array name="speedcam_distance_values">
+        <item>0.7</item>
+        <item>1.0</item>
+        <item>1.5</item>
+    </string-array>
+    <string-array name="speedcam_distance_description">
+        <item>@string/speedcam_distance_near</item>
+        <item>@string/speedcam_distance_normal</item>
+        <item>@string/speedcam_distance_far</item>
+    </string-array>
+
     <string name="ui_scale_key">ui_scale</string>
 
     <string name="ui_scale_default_value">1.0</string>

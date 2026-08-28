@@ -13,6 +13,11 @@
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE_MEDIA_PLAYBACK" />
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS"/>
 
+    <!-- speed camera warnings need the position while driving, and a service that keeps
+         running with the screen off to give them -->
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_LOCATION" />
+
     <!-- We need to be able to open links in the browser on API 30+ -->
     <queries>
         <intent>
@@ -99,6 +104,11 @@
         <service
             android:name=".local.feed.service.FeedLoadService"
             android:foregroundServiceType="dataSync" />
+
+        <service
+            android:name=".speedcam.SpeedCameraService"
+            android:exported="false"
+            android:foregroundServiceType="location" />
 
         <service
             android:name="androidx.work.impl.foreground.SystemForegroundService"
