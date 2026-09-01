@@ -1,0 +1,279 @@
+<!-- artifact: https://claude.ai/code/artifact/2f730f6f-df7f-4e88-84ab-49e926f913a3 -->
+<title>CAI PP 圖示比較</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@500;700&family=Noto+Sans+TC:wght@400;500;700&display=swap">
+
+<style>
+:root{
+  --ground:#F5F4F1; --surface:#FFFFFF; --sunk:#EDECE7;
+  --ink:#1B1A17; --ink-2:#403E37; --muted:#6E6C62; --rule:#DEDCD4;
+  --dab:#8A4B25; --hem:#3F4C7C; --hem-soft:#E5E7F1;
+  --ok:#3D6650; --ok-soft:#E3EDE6;
+  --display:"Noto Serif TC","Iowan Old Style",Palatino,Georgia,serif;
+  --body:"Noto Sans TC","Segoe UI Variable Text","Microsoft JhengHei UI",system-ui,sans-serif;
+  --mono:"Cascadia Mono",Consolas,monospace;
+  --wall-light:#DCDCE2; --wall-dark:#1A1C22;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --ground:#141519; --surface:#1D1E23; --sunk:#232429;
+    --ink:#E9E8E2; --ink-2:#C6C4BC; --muted:#95948B; --rule:#2E3037;
+    --dab:#D08A5A; --hem:#93A0DA; --hem-soft:#1E2233;
+    --ok:#7FB394; --ok-soft:#1A2620;
+  }
+}
+:root[data-theme="dark"]{
+  --ground:#141519; --surface:#1D1E23; --sunk:#232429;
+  --ink:#E9E8E2; --ink-2:#C6C4BC; --muted:#95948B; --rule:#2E3037;
+  --dab:#D08A5A; --hem:#93A0DA; --hem-soft:#1E2233;
+  --ok:#7FB394; --ok-soft:#1A2620;
+}
+body{ background:var(--ground); color:var(--ink); font-family:var(--body); font-size:16px; line-height:1.7; margin:0; }
+.wrap{ max-width:1000px; margin:0 auto; padding:44px 24px 90px; }
+.eyebrow{ font-size:12px; letter-spacing:.16em; text-transform:uppercase; color:var(--muted); font-weight:700; margin:0 0 10px; }
+h1{ font-family:var(--display); font-weight:700; font-size:36px; line-height:1.25; margin:0 0 8px; text-wrap:balance; }
+.sub{ color:var(--ink-2); margin:0 0 30px; max-width:62ch; }
+h2{ font-family:var(--display); font-size:24px; font-weight:700; margin:0 0 4px; padding-bottom:9px; border-bottom:2px solid var(--rule); }
+h3{ font-family:var(--display); font-size:18px; font-weight:700; margin:0; }
+section{ margin-top:48px; }
+.stack{ display:flex; flex-direction:column; gap:16px; }
+p{ margin:0; max-width:68ch; }
+.note{ color:var(--muted); font-size:14px; }
+
+.grid{ display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:20px; }
+.card{ background:var(--surface); border:1px solid var(--rule); padding:20px; display:flex; flex-direction:column; gap:14px; }
+.card .head{ display:flex; align-items:baseline; gap:10px; flex-wrap:wrap; }
+.tag{ font-family:var(--mono); font-size:12px; color:var(--muted); }
+.desc{ font-size:14px; color:var(--ink-2); line-height:1.6; }
+
+.walls{ display:flex; gap:14px; flex-wrap:wrap; }
+.wall{ padding:14px; border-radius:10px; display:flex; align-items:center; gap:14px; }
+.wall.light{ background:var(--wall-light); }
+.wall.dark{ background:var(--wall-dark); }
+.icon{ display:block; overflow:hidden; flex:none; }
+.icon.circle{ border-radius:50%; }
+.icon.squircle{ border-radius:28%; }
+.icon.rsquare{ border-radius:22%; }
+.big{ width:88px; height:88px; }
+.small{ width:44px; height:44px; }
+.wall .label{ font-size:11px; color:var(--muted); font-family:var(--mono); }
+
+.tablebox{ overflow-x:auto; border:1px solid var(--rule); background:var(--surface); }
+table{ border-collapse:collapse; width:100%; min-width:600px; font-size:15px; }
+th,td{ text-align:left; padding:10px 13px; border-bottom:1px solid var(--rule); vertical-align:top; }
+th{ background:var(--sunk); font-size:12px; letter-spacing:.08em; text-transform:uppercase; color:var(--muted); font-weight:700; white-space:nowrap; }
+tbody tr:last-child td{ border-bottom:none; }
+.pill{ display:inline-block; font-size:12px; font-weight:700; padding:2px 9px; border:1px solid var(--ok); background:var(--ok-soft); color:var(--ok); }
+.daily{ background:var(--hem-soft); border-left:4px solid var(--hem); padding:16px 20px; display:flex; flex-direction:column; gap:6px; }
+.daily .tag{ font-size:12px; letter-spacing:.1em; color:var(--hem); font-weight:700; font-family:var(--body); }
+.daily p{ color:var(--ink-2); }
+footer{ margin-top:56px; padding-top:18px; border-top:1px solid var(--rule); color:var(--muted); font-size:13px; }
+</style>
+
+<div class="wrap">
+
+  <p class="eyebrow">CAI PP 桌面圖示</p>
+  <h1>六個候選圖示，放在真實大小旁邊比</h1>
+  <p class="sub">每一個都畫在淺色與深色桌布上，並用手機常見的三種遮罩形狀切過：圓形、圓角方形、方形。左邊是放大版，右邊 44 像素是它在你桌面上實際的大小——<b>看小的那個才準</b>。</p>
+
+  <section class="stack">
+    <h2>甲　重新畫的，四個方向</h2>
+    <p class="desc">共通做法：深色底、單一亮色主體。深色底在桌布上比紅色更容易被認出來，也和原版拉開距離。</p>
+
+    <div class="grid">
+
+      <div class="card">
+        <div class="head"><h3>甲1　路與播放</h3><span class="tag">建議</span></div>
+        <div class="desc">播放三角形的內部是一條有中線的路。同時說出「播放」和「開車」兩件事，而且在 44 像素下仍然是一個清楚的三角形。</div>
+        <div class="walls">
+          <div class="wall light">
+            <span class="icon big circle" style="background:#16202B">
+              <svg viewBox="0 0 108 108" width="88" height="88" aria-label="甲1 圖示"><g><path d="M38 26 L84 54 L38 82 Z" fill="#F2F5F8"/><path d="M50 44 L50 50 M50 56 L50 62" stroke="#16202B" stroke-width="4" stroke-linecap="round"/><path d="M62 50 L62 55" stroke="#16202B" stroke-width="4" stroke-linecap="round"/></g></svg>
+            </span>
+            <span class="icon big squircle" style="background:#16202B">
+              <svg viewBox="0 0 108 108" width="88" height="88" aria-hidden="true"><g><path d="M38 26 L84 54 L38 82 Z" fill="#F2F5F8"/><path d="M50 44 L50 50 M50 56 L50 62" stroke="#16202B" stroke-width="4" stroke-linecap="round"/><path d="M62 50 L62 55" stroke="#16202B" stroke-width="4" stroke-linecap="round"/></g></svg>
+            </span>
+            <span class="icon small circle" style="background:#16202B">
+              <svg viewBox="0 0 108 108" width="44" height="44" aria-hidden="true"><g><path d="M38 26 L84 54 L38 82 Z" fill="#F2F5F8"/><path d="M50 44 L50 50 M50 56 L50 62" stroke="#16202B" stroke-width="4" stroke-linecap="round"/><path d="M62 50 L62 55" stroke="#16202B" stroke-width="4" stroke-linecap="round"/></g></svg>
+            </span>
+          </div>
+          <div class="wall dark">
+            <span class="icon big circle" style="background:#16202B">
+              <svg viewBox="0 0 108 108" width="88" height="88" aria-hidden="true"><g><path d="M38 26 L84 54 L38 82 Z" fill="#F2F5F8"/><path d="M50 44 L50 50 M50 56 L50 62" stroke="#16202B" stroke-width="4" stroke-linecap="round"/><path d="M62 50 L62 55" stroke="#16202B" stroke-width="4" stroke-linecap="round"/></g></svg>
+            </span>
+            <span class="icon small squircle" style="background:#16202B">
+              <svg viewBox="0 0 108 108" width="44" height="44" aria-hidden="true"><g><path d="M38 26 L84 54 L38 82 Z" fill="#F2F5F8"/><path d="M50 44 L50 50 M50 56 L50 62" stroke="#16202B" stroke-width="4" stroke-linecap="round"/><path d="M62 50 L62 55" stroke="#16202B" stroke-width="4" stroke-linecap="round"/></g></svg>
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="head"><h3>甲2　音符與速度線</h3></div>
+        <div class="desc">最直白的「車上聽音樂」。缺點是音符在小尺寸下細節較多，稍微不如三角形銳利。</div>
+        <div class="walls">
+          <div class="wall light">
+            <span class="icon big circle" style="background:#123028">
+              <svg viewBox="0 0 108 108" width="88" height="88" aria-label="甲2 圖示"><g fill="none" stroke="#EAF6EF" stroke-width="7" stroke-linecap="round"><path d="M18 40 H34"/><path d="M14 54 H30"/><path d="M18 68 H34"/></g><g fill="#EAF6EF"><path d="M58 24 L84 30 V42 L58 36 Z"/><rect x="54" y="24" width="6" height="46" rx="3"/><circle cx="48" cy="72" r="12"/></g></svg>
+            </span>
+            <span class="icon small circle" style="background:#123028">
+              <svg viewBox="0 0 108 108" width="44" height="44" aria-hidden="true"><g fill="none" stroke="#EAF6EF" stroke-width="7" stroke-linecap="round"><path d="M18 40 H34"/><path d="M14 54 H30"/><path d="M18 68 H34"/></g><g fill="#EAF6EF"><path d="M58 24 L84 30 V42 L58 36 Z"/><rect x="54" y="24" width="6" height="46" rx="3"/><circle cx="48" cy="72" r="12"/></g></svg>
+            </span>
+          </div>
+          <div class="wall dark">
+            <span class="icon big squircle" style="background:#123028">
+              <svg viewBox="0 0 108 108" width="88" height="88" aria-hidden="true"><g fill="none" stroke="#EAF6EF" stroke-width="7" stroke-linecap="round"><path d="M18 40 H34"/><path d="M14 54 H30"/><path d="M18 68 H34"/></g><g fill="#EAF6EF"><path d="M58 24 L84 30 V42 L58 36 Z"/><rect x="54" y="24" width="6" height="46" rx="3"/><circle cx="48" cy="72" r="12"/></g></svg>
+            </span>
+            <span class="icon small squircle" style="background:#123028">
+              <svg viewBox="0 0 108 108" width="44" height="44" aria-hidden="true"><g fill="none" stroke="#EAF6EF" stroke-width="7" stroke-linecap="round"><path d="M18 40 H34"/><path d="M14 54 H30"/><path d="M18 68 H34"/></g><g fill="#EAF6EF"><path d="M58 24 L84 30 V42 L58 36 Z"/><rect x="54" y="24" width="6" height="46" rx="3"/><circle cx="48" cy="72" r="12"/></g></svg>
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="head"><h3>甲3　方向盤與播放</h3></div>
+        <div class="desc">車的意象最明確。缺點是圓形方向盤放進圓形遮罩裡，會變成「圓中圓」，辨識度反而下降。</div>
+        <div class="walls">
+          <div class="wall light">
+            <span class="icon big circle" style="background:#241C2E">
+              <svg viewBox="0 0 108 108" width="88" height="88" aria-label="甲3 圖示"><circle cx="54" cy="54" r="30" fill="none" stroke="#F0E9F7" stroke-width="8"/><circle cx="54" cy="54" r="9" fill="#F0E9F7"/><path d="M54 45 V26 M45 60 L28 72 M63 60 L80 72" stroke="#F0E9F7" stroke-width="8" stroke-linecap="round"/></svg>
+            </span>
+            <span class="icon small circle" style="background:#241C2E">
+              <svg viewBox="0 0 108 108" width="44" height="44" aria-hidden="true"><circle cx="54" cy="54" r="30" fill="none" stroke="#F0E9F7" stroke-width="8"/><circle cx="54" cy="54" r="9" fill="#F0E9F7"/><path d="M54 45 V26 M45 60 L28 72 M63 60 L80 72" stroke="#F0E9F7" stroke-width="8" stroke-linecap="round"/></svg>
+            </span>
+          </div>
+          <div class="wall dark">
+            <span class="icon big rsquare" style="background:#241C2E">
+              <svg viewBox="0 0 108 108" width="88" height="88" aria-hidden="true"><circle cx="54" cy="54" r="30" fill="none" stroke="#F0E9F7" stroke-width="8"/><circle cx="54" cy="54" r="9" fill="#F0E9F7"/><path d="M54 45 V26 M45 60 L28 72 M63 60 L80 72" stroke="#F0E9F7" stroke-width="8" stroke-linecap="round"/></svg>
+            </span>
+            <span class="icon small rsquare" style="background:#241C2E">
+              <svg viewBox="0 0 108 108" width="44" height="44" aria-hidden="true"><circle cx="54" cy="54" r="30" fill="none" stroke="#F0E9F7" stroke-width="8"/><circle cx="54" cy="54" r="9" fill="#F0E9F7"/><path d="M54 45 V26 M45 60 L28 72 M63 60 L80 72" stroke="#F0E9F7" stroke-width="8" stroke-linecap="round"/></svg>
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="head"><h3>甲4　字標 CP</h3></div>
+        <div class="desc">直接用縮寫。最不會認錯，但也最沒有個性，而且中文語境下兩個英文字母在小尺寸下容易糊在一起。</div>
+        <div class="walls">
+          <div class="wall light">
+            <span class="icon big squircle" style="background:#1C2A22">
+              <svg viewBox="0 0 108 108" width="88" height="88" aria-label="甲4 圖示"><text x="54" y="70" text-anchor="middle" font-family="Georgia, serif" font-size="52" font-weight="700" fill="#F4EFE4">CP</text></svg>
+            </span>
+            <span class="icon small squircle" style="background:#1C2A22">
+              <svg viewBox="0 0 108 108" width="44" height="44" aria-hidden="true"><text x="54" y="70" text-anchor="middle" font-family="Georgia, serif" font-size="52" font-weight="700" fill="#F4EFE4">CP</text></svg>
+            </span>
+          </div>
+          <div class="wall dark">
+            <span class="icon big circle" style="background:#1C2A22">
+              <svg viewBox="0 0 108 108" width="88" height="88" aria-hidden="true"><text x="54" y="70" text-anchor="middle" font-family="Georgia, serif" font-size="52" font-weight="700" fill="#F4EFE4">CP</text></svg>
+            </span>
+            <span class="icon small circle" style="background:#1C2A22">
+              <svg viewBox="0 0 108 108" width="44" height="44" aria-hidden="true"><text x="54" y="70" text-anchor="middle" font-family="Georgia, serif" font-size="52" font-weight="700" fill="#F4EFE4">CP</text></svg>
+            </span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <section class="stack">
+    <h2>乙　沿用原版造型，只換底色</h2>
+    <p class="desc">形狀完全是 NewPipe 的原始圖形，只換掉那個紅色。最省事，但在桌面上仍然是「同一個東西換了顏色」，如果你手機上同時有原版，還是要看兩眼才分得出。</p>
+
+    <div class="grid">
+      <div class="card">
+        <div class="head"><h3>乙1　原版紅</h3><span class="tag">現況 #CD201F</span></div>
+        <div class="desc">現在裝在你手機上的樣子，放在這裡當對照組。</div>
+        <div class="walls">
+          <div class="wall light">
+            <span class="icon big circle" style="background:#CD201F">
+              <svg viewBox="0 0 100 100" width="88" height="88" aria-label="原版圖示"><path fill="#ffffff" d="m23.909,10.211v78.869c0,0 7.7,-4.556 12.4,-7.337V67.477,56.739 31.686c0,0 3.707,2.173 8.948,5.24 6.263,3.579 14.57,8.565 21.473,12.655 -9.358,5.483 -16.8,9.876 -22.496,13.234V77.053C57.974,68.927 75.176,58.762 90.762,49.581 75.551,40.634 57.144,29.768 43.467,21.715 31.963,14.94 23.909,10.211 23.909,10.211Z"/></svg>
+            </span>
+            <span class="icon small circle" style="background:#CD201F">
+              <svg viewBox="0 0 100 100" width="44" height="44" aria-hidden="true"><path fill="#ffffff" d="m23.909,10.211v78.869c0,0 7.7,-4.556 12.4,-7.337V67.477,56.739 31.686c0,0 3.707,2.173 8.948,5.24 6.263,3.579 14.57,8.565 21.473,12.655 -9.358,5.483 -16.8,9.876 -22.496,13.234V77.053C57.974,68.927 75.176,58.762 90.762,49.581 75.551,40.634 57.144,29.768 43.467,21.715 31.963,14.94 23.909,10.211 23.909,10.211Z"/></svg>
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="head"><h3>乙2　深藍</h3><span class="tag">#1B3A5C</span></div>
+        <div class="desc">夜間開車最不刺眼的一種，和海事的意象也相合。</div>
+        <div class="walls">
+          <div class="wall light">
+            <span class="icon big circle" style="background:#1B3A5C">
+              <svg viewBox="0 0 100 100" width="88" height="88" aria-hidden="true"><path fill="#ffffff" d="m23.909,10.211v78.869c0,0 7.7,-4.556 12.4,-7.337V67.477,56.739 31.686c0,0 3.707,2.173 8.948,5.24 6.263,3.579 14.57,8.565 21.473,12.655 -9.358,5.483 -16.8,9.876 -22.496,13.234V77.053C57.974,68.927 75.176,58.762 90.762,49.581 75.551,40.634 57.144,29.768 43.467,21.715 31.963,14.94 23.909,10.211 23.909,10.211Z"/></svg>
+            </span>
+            <span class="icon small circle" style="background:#1B3A5C">
+              <svg viewBox="0 0 100 100" width="44" height="44" aria-hidden="true"><path fill="#ffffff" d="m23.909,10.211v78.869c0,0 7.7,-4.556 12.4,-7.337V67.477,56.739 31.686c0,0 3.707,2.173 8.948,5.24 6.263,3.579 14.57,8.565 21.473,12.655 -9.358,5.483 -16.8,9.876 -22.496,13.234V77.053C57.974,68.927 75.176,58.762 90.762,49.581 75.551,40.634 57.144,29.768 43.467,21.715 31.963,14.94 23.909,10.211 23.909,10.211Z"/></svg>
+            </span>
+          </div>
+          <div class="wall dark">
+            <span class="icon small circle" style="background:#1B3A5C">
+              <svg viewBox="0 0 100 100" width="44" height="44" aria-hidden="true"><path fill="#ffffff" d="m23.909,10.211v78.869c0,0 7.7,-4.556 12.4,-7.337V67.477,56.739 31.686c0,0 3.707,2.173 8.948,5.24 6.263,3.579 14.57,8.565 21.473,12.655 -9.358,5.483 -16.8,9.876 -22.496,13.234V77.053C57.974,68.927 75.176,58.762 90.762,49.581 75.551,40.634 57.144,29.768 43.467,21.715 31.963,14.94 23.909,10.211 23.909,10.211Z"/></svg>
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="head"><h3>乙3　石墨灰</h3><span class="tag">#23262B</span></div>
+        <div class="desc">最低調。深色桌布上會變得不明顯，這是它唯一的問題。</div>
+        <div class="walls">
+          <div class="wall light">
+            <span class="icon big circle" style="background:#23262B">
+              <svg viewBox="0 0 100 100" width="88" height="88" aria-hidden="true"><path fill="#F0B429" d="m23.909,10.211v78.869c0,0 7.7,-4.556 12.4,-7.337V67.477,56.739 31.686c0,0 3.707,2.173 8.948,5.24 6.263,3.579 14.57,8.565 21.473,12.655 -9.358,5.483 -16.8,9.876 -22.496,13.234V77.053C57.974,68.927 75.176,58.762 90.762,49.581 75.551,40.634 57.144,29.768 43.467,21.715 31.963,14.94 23.909,10.211 23.909,10.211Z"/></svg>
+            </span>
+            <span class="icon small circle" style="background:#23262B">
+              <svg viewBox="0 0 100 100" width="44" height="44" aria-hidden="true"><path fill="#F0B429" d="m23.909,10.211v78.869c0,0 7.7,-4.556 12.4,-7.337V67.477,56.739 31.686c0,0 3.707,2.173 8.948,5.24 6.263,3.579 14.57,8.565 21.473,12.655 -9.358,5.483 -16.8,9.876 -22.496,13.234V77.053C57.974,68.927 75.176,58.762 90.762,49.581 75.551,40.634 57.144,29.768 43.467,21.715 31.963,14.94 23.909,10.211 23.909,10.211Z"/></svg>
+            </span>
+          </div>
+          <div class="wall dark">
+            <span class="icon small circle" style="background:#23262B">
+              <svg viewBox="0 0 100 100" width="44" height="44" aria-hidden="true"><path fill="#F0B429" d="m23.909,10.211v78.869c0,0 7.7,-4.556 12.4,-7.337V67.477,56.739 31.686c0,0 3.707,2.173 8.948,5.24 6.263,3.579 14.57,8.565 21.473,12.655 -9.358,5.483 -16.8,9.876 -22.496,13.234V77.053C57.974,68.927 75.176,58.762 90.762,49.581 75.551,40.634 57.144,29.768 43.467,21.715 31.963,14.94 23.909,10.211 23.909,10.211Z"/></svg>
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="stack">
+    <h2>丙　你提供圖片</h2>
+    <p>這一案沒有東西可以先給你看，因為圖由你決定。你給我一張圖或一個方向，我負責切成手機需要的各種尺寸、處理遮罩安全範圍、嵌進 app。<b>唯一的限制是它在 44 像素下要還認得出來</b>，照片類的圖通常做不到，線條簡單的圖才行。</p>
+  </section>
+
+  <section class="stack">
+    <h2>怎麼挑</h2>
+    <div class="daily">
+      <b class="tag">判斷方式</b>
+      <p>把畫面縮到只看右邊那個 44 像素的小圖，瞇著眼睛看。桌面上你不會盯著圖示研究，是用餘光掃過去找它——認得出輪廓就夠了，細節根本看不到。用這個標準看，甲1 的三角形和甲4 的字母最禁得起縮小，甲2 的音符次之，甲3 的方向盤在圓形遮罩下最吃虧。</p>
+    </div>
+
+    <div class="tablebox">
+      <table>
+        <thead><tr><th>方案</th><th>一眼認得出</th><th>和原版拉開距離</th><th>符合車用</th><th>工時</th></tr></thead>
+        <tbody>
+          <tr><td><b>甲1 路與播放</b> <span class="pill">建議</span></td><td>高</td><td>高</td><td>高</td><td>2 小時</td></tr>
+          <tr><td>甲2 音符與速度線</td><td>中</td><td>高</td><td>高</td><td>2 小時</td></tr>
+          <tr><td>甲3 方向盤</td><td>中低</td><td>高</td><td>最高</td><td>2 小時</td></tr>
+          <tr><td>甲4 字標 CP</td><td>高</td><td>高</td><td>低</td><td>1 小時</td></tr>
+          <tr><td>乙2 深藍換色</td><td>中</td><td>中</td><td>中</td><td>30 分鐘</td></tr>
+          <tr><td>乙3 石墨灰配琥珀</td><td>中</td><td>中</td><td>中</td><td>30 分鐘</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p class="note">選定後，圖示的主色我會拿來當 app 的強調色，兩邊一致；這樣「紅色介面要不要換」那一題也一併解決。</p>
+  </section>
+
+  <footer>
+    CAI PP 圖示候選，2026-09-02。圖形均為向量，選定後可再調整比例與粗細。乙案沿用 NewPipe 原始圖形，GPLv3 授權下允許修改。
+  </footer>
+
+</div>
