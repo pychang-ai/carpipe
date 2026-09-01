@@ -1,10 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- YouTube -->
-    <color name="light_youtube_primary_color">#e53935</color>
+    <!-- YouTube.
+         The red these were is YouTube's, and it made the app hard to tell apart from the
+         one it was forked from and hard on the eyes at night. They now match the launcher
+         icon, so the app and the thing tapped to open it are plainly the same. -->
+    <color name="light_youtube_primary_color">#4A3A63</color>
     <color name="light_youtube_accent_color">#000000</color>
 
-    <color name="dark_youtube_primary_color">#992722</color>
+    <color name="dark_youtube_primary_color">#241C2E</color>
     <color name="dark_youtube_accent_color">#FFFFFF</color>
 
     <!-- SoundCloud -->

@@ -1,0 +1,32 @@
+<!--
+  CAI PP launcher mark: a steering wheel.
+
+  Drawn on the 108dp adaptive canvas, where only the middle 72dp is guaranteed to survive
+  a launcher's crop. The rim is heavy and the three spokes run right out to it, so the
+  wheel still reads as a wheel rather than as one circle inside another once it is cropped
+  to a circle, which is the weak point of this shape.
+-->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+
+    <!-- rim -->
+    <path
+        android:pathData="M54,54 m-30,0 a30,30 0 1,0 60,0 a30,30 0 1,0 -60,0"
+        android:strokeColor="#F0E9F7"
+        android:strokeWidth="9" />
+
+    <!-- spokes: one up, two down, the arrangement a hand recognises as a wheel -->
+    <path
+        android:pathData="M54,54 L54,26 M54,54 L29,69 M54,54 L79,69"
+        android:strokeColor="#F0E9F7"
+        android:strokeLineCap="round"
+        android:strokeWidth="9" />
+
+    <!-- hub -->
+    <path
+        android:fillColor="#F0E9F7"
+        android:pathData="M54,54 m-11,0 a11,11 0 1,0 22,0 a11,11 0 1,0 -22,0" />
+</vector>
