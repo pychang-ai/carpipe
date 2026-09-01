@@ -114,6 +114,11 @@
     <string name="speedcam_alert_with_limit">Speed camera in %1$d meters, limit %2$d</string>
     <string name="speedcam_alert">Speed camera in %1$d meters</string>
     <string name="speedcam_alert_over_limit">Speed camera in %1$d meters, limit %2$d, please slow down</string>
+    <string name="speedcam_alert_elevated">Speed camera on the elevated road in %1$d meters, limit %2$d</string>
+    <string name="speedcam_alert_elevated_over_limit">Speed camera on the elevated road in %1$d meters, limit %2$d, please slow down</string>
+    <string name="speedcam_stage">%1$d</string>
+    <string name="speedcam_stage_over_limit">%1$d, slow down</string>
+    <string name="speedcam_passed">Passed</string>
     <string name="speedcam_channel_name">Driving mode</string>
     <string name="speedcam_channel_description">Shown while speed camera warnings are running</string>
     <string name="speedcam_running_title">Driving mode is on</string>

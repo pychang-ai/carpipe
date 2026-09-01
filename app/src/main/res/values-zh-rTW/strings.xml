@@ -63,6 +63,11 @@
     <string name="speedcam_alert_with_limit">前方 %1$d 公尺測速，限速 %2$d</string>
     <string name="speedcam_alert">前方 %1$d 公尺測速</string>
     <string name="speedcam_alert_over_limit">前方 %1$d 公尺測速，限速 %2$d，請減速</string>
+    <string name="speedcam_alert_elevated">前方 %1$d 公尺高架測速，限速 %2$d</string>
+    <string name="speedcam_alert_elevated_over_limit">前方 %1$d 公尺高架測速，限速 %2$d，請減速</string>
+    <string name="speedcam_stage">%1$d</string>
+    <string name="speedcam_stage_over_limit">%1$d，減速</string>
+    <string name="speedcam_passed">通過</string>
     <string name="speedcam_channel_name">行車模式</string>
     <string name="speedcam_channel_description">測速警示執行中時顯示</string>
     <string name="speedcam_running_title">行車模式進行中</string>

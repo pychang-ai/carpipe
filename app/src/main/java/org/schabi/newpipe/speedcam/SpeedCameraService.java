@@ -29,8 +29,10 @@ import org.schabi.newpipe.MainActivity;
 import org.schabi.newpipe.R;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
+import java.util.Set;
 
 /**
  * Warns about the speed camera ahead while driving.
@@ -54,6 +56,8 @@ public final class SpeedCameraService extends Service implements LocationListene
     public static final String ACTION_MARK = "org.schabi.newpipe.speedcam.MARK";
 
     private final SpeedCameraAlerts alerts = new SpeedCameraAlerts();
+    /** Cameras already given the full sentence, so later stages can be a bare number. */
+    private final Set<SpeedCamera> introduced = new HashSet<>();
     private List<SpeedCamera> cameras;
     private Location lastLocation;
     private LocationManager locationManager;
@@ -94,6 +98,7 @@ public final class SpeedCameraService extends Service implements LocationListene
         }
 
         alerts.reset();
+        introduced.clear();
         startListening();
         return START_STICKY;
     }
@@ -138,36 +143,59 @@ public final class SpeedCameraService extends Service implements LocationListene
             return;
         }
 
-        final SpeedCamera camera = alerts.nextAlert(cameras, location.getLatitude(),
-                location.getLongitude(), location.getBearing(), warningScale());
-        if (camera == null) {
+        // metres per second is what the phone reports; drivers think in kilometres per hour
+        final float speedKmh = location.getSpeed() * 3.6f;
+
+        final SpeedCameraAlerts.Alert alert = alerts.nextAlert(cameras, location.getLatitude(),
+                location.getLongitude(), location.getBearing(), warningScale(), speedKmh);
+        if (alert == null) {
             return;
         }
 
-        final int distance = (int) Geo.distanceMeters(location.getLatitude(),
-                location.getLongitude(), camera.latitude(), camera.longitude());
-        // metres per second is what the phone reports; drivers think in kilometres per hour
-        announce(distance, camera.limitKmh(), location.getSpeed() * 3.6f);
+        if (alert.passed()) {
+            speak(getString(R.string.speedcam_passed));
+            return;
+        }
+
+        // the first call for a camera gets the whole sentence; the later ones are just the
+        // number, because at motorway speed only a few seconds separate them
+        final boolean firstCall = introduced.add(alert.camera());
+        announce(alert, speedKmh, firstCall);
     }
 
     private float warningScale() {
         return SpeedCameraSettings.warningScale(this);
     }
 
-    private void announce(final int distanceMeters, final int limitKmh, final float speedKmh) {
+    private void announce(@NonNull final SpeedCameraAlerts.Alert alert, final float speedKmh,
+                          final boolean firstCall) {
         if (!speechReady) {
             return;
         }
-        final int rounded = Math.max(50, Math.round(distanceMeters / 50f) * 50);
+
+        final int stageMeters = alert.stageMeters();
+        final int limitKmh = alert.camera().limitKmh();
+        final boolean speeding = SpeedCameraAlerts.isOverLimit(speedKmh, limitKmh);
 
         final String text;
-        if (limitKmh <= 0) {
-            text = getString(R.string.speedcam_alert, rounded);
-        } else if (SpeedCameraAlerts.isOverLimit(speedKmh, limitKmh)) {
+        if (!firstCall) {
+            // a bare number, so it still fits between two stages at motorway speed
+            text = speeding
+                    ? getString(R.string.speedcam_stage_over_limit, stageMeters)
+                    : getString(R.string.speedcam_stage, stageMeters);
+        } else if (limitKmh <= 0) {
+            text = getString(R.string.speedcam_alert, stageMeters);
+        } else if (alert.camera().deck() == SpeedCamera.Deck.ELEVATED) {
+            // saying which deck it thinks we are on lets the driver catch it being wrong
+            text = speeding
+                    ? getString(R.string.speedcam_alert_elevated_over_limit,
+                            stageMeters, limitKmh)
+                    : getString(R.string.speedcam_alert_elevated, stageMeters, limitKmh);
+        } else if (speeding) {
             // the same warning every time stops being heard, so the one that matters differs
-            text = getString(R.string.speedcam_alert_over_limit, rounded, limitKmh);
+            text = getString(R.string.speedcam_alert_over_limit, stageMeters, limitKmh);
         } else {
-            text = getString(R.string.speedcam_alert_with_limit, rounded, limitKmh);
+            text = getString(R.string.speedcam_alert_with_limit, stageMeters, limitKmh);
         }
         speak(text);
     }

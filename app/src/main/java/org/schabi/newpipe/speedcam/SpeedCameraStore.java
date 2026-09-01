@@ -133,8 +133,8 @@ public final class SpeedCameraStore {
     }
 
     private static SpeedCamera parseLine(@NonNull final String line) {
-        final String[] parts = line.split(",", 4);
-        if (parts.length < 4) {
+        final String[] parts = line.split(",", 5);
+        if (parts.length < 5) {
             return null;
         }
         try {
@@ -142,7 +142,8 @@ public final class SpeedCameraStore {
                     Double.parseDouble(parts[0]),
                     Double.parseDouble(parts[1]),
                     Integer.parseInt(parts[2]),
-                    CameraDirections.parse(parts[3]));
+                    SpeedCamera.Deck.of(parts[3]),
+                    CameraDirections.parse(parts[4]));
         } catch (final NumberFormatException e) {
             return null;
         }

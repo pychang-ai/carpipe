@@ -48,7 +48,8 @@ public final class SpeedCameraMarks {
         } catch (final IOException e) {
             Log.e(TAG, "could not store the mark", e);
         }
-        return new SpeedCamera(latitude, longitude, 0, EVERY_DIRECTION);
+        return new SpeedCamera(latitude, longitude, 0,
+                SpeedCamera.Deck.UNKNOWN, EVERY_DIRECTION);
     }
 
     /**
@@ -73,7 +74,8 @@ public final class SpeedCameraMarks {
                 if (parts.length == 2) {
                     try {
                         marks.add(new SpeedCamera(Double.parseDouble(parts[0]),
-                                Double.parseDouble(parts[1]), 0, EVERY_DIRECTION));
+                                Double.parseDouble(parts[1]), 0,
+                                SpeedCamera.Deck.UNKNOWN, EVERY_DIRECTION));
                     } catch (final NumberFormatException ignored) {
                         // a damaged line must not cost the driver the rest of their marks
                     }

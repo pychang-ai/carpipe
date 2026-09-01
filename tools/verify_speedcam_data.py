@@ -90,12 +90,34 @@ def check(frame):
     return kept, failures, notes
 
 
+def deck_of(address):
+    """Says which deck of the road a camera watches, when the address gives it away.
+
+    Around one camera in twenty sits on an elevated road, in a tunnel or on a ramp, and a few
+    sit on the surface street underneath one. A phone can tell where the car is but not which
+    deck it is on, so this tag is what later lets the speed the car is doing decide between
+    two cameras standing at the same place.
+    """
+    text = str(address)
+    if "高架" in text and ("下" in text.split("高架", 1)[1][:3]):
+        # "基隆高架道下敦化南路段" is the surface street beneath the elevated road
+        return "under"
+    if "高架" in text:
+        return "elevated"
+    if "隧道" in text:
+        return "tunnel"
+    if "匝道" in text:
+        return "ramp"
+    return ""
+
+
 def write_asset(kept, path):
-    """Writes the smallest form the app needs: where, how fast, which way."""
+    """Writes the smallest form the app needs: where, how fast, which way, which deck."""
     asset = pd.DataFrame({
         "lat": pd.to_numeric(kept["Latitude"]).round(6),
         "lon": pd.to_numeric(kept["Longitude"]).round(6),
         "limit": pd.to_numeric(kept["limit"], errors="coerce").fillna(0).astype(int),
+        "deck": kept["Address"].map(deck_of),
         "direct": kept["direct"].astype(str).str.strip(),
     })
     asset = asset.drop_duplicates(subset=["lat", "lon", "direct"])
