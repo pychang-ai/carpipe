@@ -1,0 +1,199 @@
+<!-- artifact: https://claude.ai/code/artifact/e1e3dede-db24-464e-a079-342049a91ae1 -->
+<title>測速警示三項改良評估</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@500;700&family=Noto+Sans+TC:wght@400;500;700&display=swap">
+
+<style>
+:root{
+  --ground:#F5F4F1; --surface:#FFFFFF; --sunk:#EDECE7;
+  --ink:#1B1A17; --ink-2:#403E37; --muted:#6E6C62; --rule:#DEDCD4; --rule-2:#CBC8BE;
+  --dab:#8A4B25; --hem:#3F4C7C; --hem-soft:#E5E7F1;
+  --ok:#3D6650; --ok-soft:#E3EDE6; --warn:#8F6416; --warn-soft:#F6EDDA;
+  --bad:#963428; --bad-soft:#F6E4E1;
+  --display:"Noto Serif TC","Iowan Old Style","Palatino Linotype",Palatino,Georgia,serif;
+  --body:"Noto Sans TC","Segoe UI Variable Text","Microsoft JhengHei UI",system-ui,sans-serif;
+  --mono:"Cascadia Mono",Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --ground:#141519; --surface:#1D1E23; --sunk:#232429;
+    --ink:#E9E8E2; --ink-2:#C6C4BC; --muted:#95948B; --rule:#2E3037; --rule-2:#3C3F47;
+    --dab:#D08A5A; --hem:#93A0DA; --hem-soft:#1E2233;
+    --ok:#7FB394; --ok-soft:#1A2620; --warn:#CFA85A; --warn-soft:#2C2416;
+    --bad:#D9796E; --bad-soft:#2E1C1A;
+  }
+}
+:root[data-theme="dark"]{
+  --ground:#141519; --surface:#1D1E23; --sunk:#232429;
+  --ink:#E9E8E2; --ink-2:#C6C4BC; --muted:#95948B; --rule:#2E3037; --rule-2:#3C3F47;
+  --dab:#D08A5A; --hem:#93A0DA; --hem-soft:#1E2233;
+  --ok:#7FB394; --ok-soft:#1A2620; --warn:#CFA85A; --warn-soft:#2C2416;
+  --bad:#D9796E; --bad-soft:#2E1C1A;
+}
+body{ background:var(--ground); color:var(--ink); font-family:var(--body); font-size:16px; line-height:1.75; margin:0; }
+.wrap{ max-width:960px; margin:0 auto; padding:48px 24px 96px; }
+.eyebrow{ font-size:12px; letter-spacing:.16em; text-transform:uppercase; color:var(--muted); font-weight:700; margin:0 0 10px; }
+h1{ font-family:var(--display); font-weight:700; font-size:38px; line-height:1.25; margin:0 0 8px; text-wrap:balance; }
+.sub{ color:var(--ink-2); margin:0 0 32px; max-width:64ch; }
+h2{ font-family:var(--display); font-size:25px; font-weight:700; line-height:1.3; margin:0 0 4px; text-wrap:balance; padding-bottom:10px; border-bottom:2px solid var(--dab); }
+h3{ font-family:var(--display); font-size:19px; font-weight:700; margin:16px 0 2px; }
+section{ margin-top:52px; }
+.stack{ display:flex; flex-direction:column; gap:18px; }
+p{ margin:0; max-width:70ch; }
+.hero{ background:var(--surface); border:1px solid var(--rule); border-top:4px solid var(--dab); padding:26px; margin-bottom:30px; display:flex; flex-wrap:wrap; gap:26px; align-items:baseline; }
+.hero .big{ font-family:var(--display); font-size:46px; font-weight:700; line-height:1; color:var(--dab); font-variant-numeric:tabular-nums; }
+.hero .big small{ font-size:18px; color:var(--muted); font-weight:500; }
+.hero p{ flex:1 1 320px; color:var(--ink-2); }
+.tablebox{ overflow-x:auto; border:1px solid var(--rule); background:var(--surface); }
+table{ border-collapse:collapse; width:100%; min-width:660px; font-size:15px; }
+th,td{ text-align:left; padding:11px 14px; border-bottom:1px solid var(--rule); vertical-align:top; }
+th{ background:var(--sunk); font-size:12px; letter-spacing:.08em; text-transform:uppercase; color:var(--muted); font-weight:700; white-space:nowrap; }
+tbody tr:last-child td{ border-bottom:none; }
+td.num{ font-variant-numeric:tabular-nums; white-space:nowrap; color:var(--muted); font-family:var(--mono); font-size:13px; }
+code{ font-family:var(--mono); font-size:13px; background:var(--sunk); padding:1px 5px; border:1px solid var(--rule); }
+.pill{ display:inline-block; font-size:12px; font-weight:700; padding:2px 9px; white-space:nowrap; border:1px solid transparent; }
+.pill.ok{ background:var(--ok-soft); color:var(--ok); border-color:var(--ok); }
+.pill.warn{ background:var(--warn-soft); color:var(--warn); border-color:var(--warn); }
+.pill.bad{ background:var(--bad-soft); color:var(--bad); border-color:var(--bad); }
+.daily{ background:var(--hem-soft); border-left:4px solid var(--hem); padding:16px 20px; display:flex; flex-direction:column; gap:6px; }
+.daily .tag{ font-size:12px; letter-spacing:.1em; color:var(--hem); font-weight:700; }
+.daily p{ color:var(--ink-2); }
+.honest{ background:var(--bad-soft); border:1px solid var(--bad); padding:20px 24px; display:flex; flex-direction:column; gap:12px; }
+.honest h2{ border-bottom-color:var(--bad); color:var(--bad); margin-bottom:2px; }
+.honest ul{ margin:0; padding-left:20px; display:flex; flex-direction:column; gap:8px; }
+.honest li{ color:var(--ink-2); }
+ul.plain{ margin:0; padding-left:20px; display:flex; flex-direction:column; gap:6px; }
+ul.plain li{ color:var(--ink-2); }
+footer{ margin-top:60px; padding-top:18px; border-top:1px solid var(--rule); color:var(--muted); font-size:13px; }
+</style>
+
+<div class="wrap">
+
+  <p class="eyebrow">CAI PP 測速警示</p>
+  <h1>橋上橋下、逐段報距離、通過提示</h1>
+  <p class="sub">三項要求逐一評估：兩項可以直接做，一項做得到但只能做到八成，而且必須先講清楚剩下的兩成會怎麼失準。2026 年 9 月 2 日。</p>
+
+  <div class="hero">
+    <div class="big">32<small> 筆資料標了高架</small></div>
+    <p>全部 1897 個測速點裡，地址寫明高架的只有 32 筆，佔百分之一點七。橋上橋下能不能分，卡在這個數字上。</p>
+  </div>
+
+  <section class="stack">
+    <h2>一、逐段報距離：可以做</h2>
+    <p>目前是接近時報一次。改成 500、300、200、100 公尺各報一次，做法單純：記住每個測速點已經報過哪幾段，跨過門檻就報下一段。</p>
+
+    <h3>要注意的是講話會不會來不及</h3>
+    <div class="tablebox">
+      <table>
+        <thead><tr><th>車速</th><th>500 到 100 公尺共</th><th>兩百到一百之間</th><th>判斷</th></tr></thead>
+        <tbody>
+          <tr><td>市區 50</td><td>29 秒</td><td>7.2 秒</td><td><span class="pill ok">從容</span></td></tr>
+          <tr><td>快速道路 80</td><td>18 秒</td><td>4.5 秒</td><td><span class="pill ok">夠</span></td></tr>
+          <tr><td>國道 110</td><td>13 秒</td><td>3.3 秒</td><td><span class="pill warn">句子要短</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>所以第一次報完整句「前方五百公尺測速，限速六十」，後面三次只報數字：「三百」「兩百」「一百」。這樣即使在國道上也講得完，而且短句在引擎聲裡反而更聽得清楚。</p>
+
+    <h3>還有一個要防的</h3>
+    <p>如果你是在距離測速點 250 公尺處才啟動 app，不該把五百和三百補報一遍。只報當下該報的那一段，之後照常往下走。</p>
+  </section>
+
+  <section class="stack">
+    <h2>二、通過提示：可以做，而且值得做</h2>
+    <p>偵測到測速點跑到車後方就說「通過」。這件事的價值不只是告知，還在於<b>你會知道整套機制真的在運作</b>——沒有這句話，一趟路沒遇到測速點時，你分不出是「這條路真的沒有」還是「程式壞了沒出聲」。</p>
+    <p>判斷方式是位置與行進方向的夾角超過九十度，也就是它已經在身後。搭配既有的「同一點一趟只報一次」，塞車時不會反覆講。</p>
+  </section>
+
+  <section class="stack">
+    <h2>三、橋上橋下：做得到八成，剩下兩成必須說清楚</h2>
+
+    <h3>資料裡有什麼</h3>
+    <div class="tablebox">
+      <table>
+        <thead><tr><th>地址關鍵字</th><th>筆數</th><th>能不能用</th></tr></thead>
+        <tbody>
+          <tr><td>高架</td><td>32</td><td><span class="pill ok">能</span> 明確指出是高架路段</td></tr>
+          <tr><td>隧道</td><td>55</td><td><span class="pill ok">能</span> 同理，位置明確</td></tr>
+          <tr><td>匝道</td><td>16</td><td><span class="pill ok">能</span> 上下高架的交界</td></tr>
+          <tr><td>橋</td><td>78</td><td><span class="pill bad">多半不能</span> 大部分是路名，例如柳橋東路、清寧橋前，跟高低無關</td></tr>
+          <tr><td>地下、平面</td><td>7</td><td><span class="pill warn">少</span> 數量太少</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p>資料裡確實有你說的那種狀況，而且寫得很清楚：</p>
+    <ul class="plain">
+      <li><code>東大高架民族路上方</code>——高架在民族路上面</li>
+      <li><code>建國高架道和平東路上方</code>——同上</li>
+      <li><code>基隆高架道下敦化南路段</code>——<b>這一支是裝在高架橋下面的平面道路上</b></li>
+    </ul>
+
+    <div class="daily">
+      <b class="tag">日常例子</b>
+      <p>這就像同一個門牌號碼底下有兩戶，一戶在二樓一戶在一樓。地址查得到兩戶都在，但只靠地址查不出訪客現在站在哪一層。手機的定位就是那個地址：它知道你在哪一棟，不知道你在幾樓。</p>
+    </div>
+
+    <h3>能拿來判斷「你在哪一層」的線索，只有三個</h3>
+    <div class="tablebox">
+      <table>
+        <thead><tr><th>線索</th><th>可靠度</th><th>說明</th></tr></thead>
+        <tbody>
+          <tr>
+            <td><b>你的車速對照兩支的速限</b></td>
+            <td><span class="pill ok">最好用</span></td>
+            <td>高架多半限速 70 到 80，底下平面道路 40 到 50。你開 75 就幾乎不可能在平面道路上。這是最實用的一條</td>
+          </tr>
+          <tr>
+            <td>手機測到的高度</td>
+            <td><span class="pill warn">弱</span></td>
+            <td>高架橋距地面約 8 到 15 公尺，而手機的高度誤差本來就有 10 到 30 公尺，市區高樓間更差。單獨用會判錯</td>
+          </tr>
+          <tr>
+            <td>資料裡的高架、隧道字樣</td>
+            <td><span class="pill ok">可靠但範圍小</span></td>
+            <td>只涵蓋一百多筆，其餘的點根本沒說自己在哪一層</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3>建議的做法</h3>
+    <ul class="plain">
+      <li><b>先標記</b>：從地址判出高架、隧道、匝道、橋下，替這些點加上層級標籤。</li>
+      <li><b>再用車速選一支</b>：同一位置附近有兩支速限差距大的測速點時，選速限最接近你目前車速的那一支來報。</li>
+      <li><b>分不出來就都報</b>：兩支速限接近、或資料沒說層級時，維持現在的作法照報。<b>漏報要收罰單，誤報只是多聽一句話，兩者代價不對等。</b></li>
+      <li><b>把判斷講出來</b>：報成「前方五百公尺高架測速，限速八十」，你聽到「高架」兩個字就知道它認為你在上面。認錯的時候你當場就發現，而不是事後收單才知道。</li>
+    </ul>
+  </section>
+
+  <section class="stack">
+    <h2>四、工時與順序</h2>
+    <div class="tablebox">
+      <table>
+        <thead><tr><th>項目</th><th>工時</th><th>建議順序</th></tr></thead>
+        <tbody>
+          <tr><td>逐段報距離 500、300、200、100</td><td>半天</td><td>1</td></tr>
+          <tr><td>通過提示</td><td>含在上面</td><td>1</td></tr>
+          <tr><td>橋上橋下標記與車速判斷</td><td>半天</td><td>2</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>合計約一天。前兩項單純且立刻有感，先做；第三項牽涉判斷邏輯，做完你上車一趟就知道準不準，屆時把判錯的路段告訴我，我再調整。</p>
+  </section>
+
+  <section class="stack honest">
+    <h2>五、必須先講清楚的三件事</h2>
+    <ul>
+      <li><b>橋上橋下永遠不會百分之百準。</b>手機只知道你在哪個位置，不知道你在哪一層。用車速判斷在多數情況有效，但你在高架上塞車以時速 40 前進時，它會判成你在平面道路上——那時它會用平面那支的速限報給你。</li>
+      <li><b>報四次會讓警示變多。</b>市區測速點密集的路段，可能一路都在講話。實際跑過如果覺得吵，我可以改成「只有超速時才報四段，沒超速報兩段」，但那要等你聽過才知道要不要。</li>
+      <li><b>通過提示會暴露一件事</b>：如果你經過了明知有測速的地方卻沒聽到任何一句，那就是判斷邏輯或資料有問題。這正是加它的用意，但心理上要有準備，剛開始可能會抓到幾個沒報到的點。</li>
+    </ul>
+  </section>
+
+  <footer>
+    CAI PP 測速警示改良評估，2026-09-02。資料統計以 <code>data/speedcam/verified.csv</code> 的 1897 筆為準。
+  </footer>
+
+</div>
